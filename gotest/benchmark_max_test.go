@@ -2,7 +2,7 @@ package gotest
 
 import (
 	"testing"
-	"goField/Func"
+	"FuncGo/Func"
 )
 func Benchmark_max_int(b *testing.B)  {
 	//b.StopTimer()

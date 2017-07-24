@@ -2,7 +2,7 @@ package gotest
 
 import (
 	"testing"
-	"goField/Func"
+	"FuncGo/Func"
 )
 
 func Test_max_Array(t *testing.T) {

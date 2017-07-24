@@ -2,7 +2,7 @@ package gotest
 
 import (
 	"testing"
-	"goField/Func"
+	"FuncGo/Func"
 	"unsafe"
 )
 

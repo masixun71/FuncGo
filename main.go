@@ -4,7 +4,7 @@ import (
 	"unsafe"
 	"fmt"
 	"reflect"
-	"goField/Func"
+	"FuncGo/Func"
 )
 
 type TestObj struct {
