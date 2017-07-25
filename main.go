@@ -1,105 +1,115 @@
 package main
 
 import (
-	"unsafe"
+	"go/token"
+	"go/parser"
+	"go/ast"
 	"fmt"
-	"reflect"
-	"FuncGo/Func"
+	"strconv"
 )
 
-type TestObj struct {
-	field1 string
-}
-
-type sliceHeader struct {
-	Data unsafe.Pointer
-	Len  int
-	Cap  int
-}
-
-func ff(values ...interface{}) {
-
-	fmt.Println(reflect.TypeOf(values))
-
-}
-
-func Max(values ...interface{}) interface{} {
-
-	fmt.Println(reflect.TypeOf(values))
-
-	ff(values[0])
-
-	return nil
-}
-
-var cache = map[*uintptr]map[string]uintptr{}
-
-func getType(val interface{}) string {
-
-	typ := reflect.TypeOf(val)
-	switch typ.Kind() {
-	case reflect.Invalid:
-		return "invalid"
-	case reflect.Int:
-
-	}
-
-	itab := *(**uintptr)(unsafe.Pointer(&val))
-
-	m, ok := cache[itab]
-	if !ok {
-		m = make(map[string]uintptr)
-		cache[itab] = m
-	}
-
-	return "1"
-}
-
-type foo struct {
-	A int
-	Func.Comparer
-}
-type foo2 struct {
-	b string
-}
-
-func (f foo) Compare(value interface{}) bool {
-	val, _ := value.(foo)
-
-	if f.A >= val.A {
-		return true
-	} else {
-		return false
-	}
-
-}
-
-
-
 func main() {
-	a := [5]int{1,2,3,4,5}
-	//b := [6]int{1,2,3,4,5,6}
-	//_, err := Func.Max(a, b)
-	//if err != nil {
-	//	fmt.Println("ok")
-	//}
 
-	val, err := Func.Max(a)
-	fmt.Println(val)
+	values := []int{1, 2, 3}
+
+	vars := make(map[string]interface{}, 0)
+
+	fset := token.NewFileSet()
+	f, err := parser.ParseFile(fset, "./Func/AST.go", nil, parser.ParseComments)
+
 	if err != nil {
-		fmt.Println("test fail", err)
+		panic(err)
 	}
 
-	if val != 5 {
-		fmt.Println("result is error", val)
+	for _, decl := range f.Decls {
+		fn, ok := decl.(*ast.FuncDecl)
+		if ok && fn.Name.Name == "astMax" {
+
+			assignStmt, ok := fn.Body.List[0].(*ast.AssignStmt)
+			if ok {
+				x, ok := assignStmt.Lhs[0].(*ast.Ident)
+				if ok {
+					y, ok := assignStmt.Rhs[0].(*ast.CallExpr)
+					if ok {
+						ident, ok := y.Fun.(*ast.Ident)
+						if ok && ident.Name == "len" {
+							vars[x.Name] = len(values)
+						}
+					}
+
+				}
+
+			}
+
+			assignStmt, ok = fn.Body.List[1].(*ast.AssignStmt)
+			if ok {
+				x, ok := assignStmt.Lhs[0].(*ast.Ident)
+				if ok {
+					y, ok := assignStmt.Rhs[0].(*ast.IndexExpr)
+					if ok {
+						index, ok := y.Index.(*ast.BasicLit)
+						if ok {
+							if index.Kind == token.INT {
+								yindex, _ := strconv.Atoi(index.Value)
+								vars[x.Name] = values[yindex]
+							}
+						}
+					}
+				}
+
+			}
+
+			forStmt, ok := fn.Body.List[2].(*ast.ForStmt)
+			if ok {
+				init, ok := forStmt.Init.(*ast.AssignStmt)
+				if ok {
+					x, ok := init.Lhs[0].(*ast.Ident)
+					if ok {
+						initValue, ok := init.Rhs[0].(*ast.BasicLit)
+						if ok {
+							if initValue.Kind == token.INT {
+								yindex, _ := strconv.Atoi(initValue.Value)
+								vars[x.Name] = yindex
+							}
+						}
+					}
+				}
+
+				cond, ok := forStmt.Cond.(*ast.BinaryExpr)
+				if ok {
+					x, ok := cond.X.(*ast.Ident)
+					if ok {
+						_, ok := vars[x.Name]
+						if !ok {
+							panic("变量不存在" + x.Name)
+						}
+					}
+
+					if cond.Op != token.LSS {
+						panic("for 循环变量有误")
+					}
+
+				}
+
+				post, ok := forStmt.Post.(*ast.IncDecStmt)
+				if ok {
+					x, ok := cond.X.(*ast.Ident)
+					if ok {
+						if x.Name != "i" {
+							panic("for 循环变量有误")
+						}
+					}
+					if post.Tok != token.INC {
+						panic("for 循环变量有误")
+
+					}
+				}
+
+			}
+
+		}
 	}
-}
 
-func fff(slice interface{}) {
-
-
-	val,ok := slice.([]string)
-	fmt.Println(val)
-	fmt.Println(ok)
+	fmt.Println(vars)
 
 }
