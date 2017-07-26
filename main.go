@@ -92,7 +92,7 @@ func main() {
 				if ok {
 					x, ok := cond.X.(*ast.Ident)
 					if ok {
-						_, ok := vars[x.Name]
+						_, ok := intVars[x.Name]
 						if !ok {
 							panic("变量不存在" + x.Name)
 						}
@@ -137,12 +137,9 @@ func main() {
 					if ok {
 						y, ok := ass.Rhs[0].(*ast.IndexExpr)
 						if ok {
-							index, ok := y.Index.(*ast.Ident)
+							_, ok := y.Index.(*ast.Ident)
 							if ok {
-								_, ok := vars[index.Name].(int)
-								if ok {
-									tmpValueName = x.Name
-								}
+								tmpValueName = x.Name
 							}
 						}
 					}
@@ -199,11 +196,9 @@ func main() {
 	for cycle := intVars[cycleName]; cycle < intVars[lenName]; cycle++ {
 		vars[tmpValueName] = values[cycle]
 
-		if vars[maxName] < vars[tmpValueName] {
+		if lib.CompareBetween(vars[maxName], vars[tmpValueName]) == lib.LT {
 			vars[maxName] = vars[tmpValueName]
 		}
 	}
-
-	fmt.Println(vars[maxName])
 
 }

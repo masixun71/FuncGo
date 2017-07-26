@@ -1,6 +1,6 @@
 package lib
 
-
+import "reflect"
 
 type Comparer interface {
 
@@ -19,189 +19,229 @@ type Comparer interface {
 	compareString() int
 }
 
+const (
+	GT = 1 //>
+	EQ = 0 //=
+	LT = -1 //<
+)
+
+
 type Compare struct {
 	first interface{}
 	second interface{}
 }
 
-func (c *Compare) compareInt() int {
-	tFirst,_ := c.first.(int)
-	tSecond,_ := c.first.(int)
+func compareInt(first, second interface{}) int {
+	tFirst,_ := first.(int)
+	tSecond,_ := second.(int)
 
 	if tFirst > tSecond {
-		return -1
+		return GT
 	}else if tFirst < tSecond{
-		return 1
+		return LT
 	} else {
-		return 0
+		return EQ
 	}
 }
 
-func (c *Compare) compareInt8() int {
-
-	tFirst,_ := c.first.(int8)
-	tSecond,_ := c.first.(int8)
+func compareInt8(first, second interface{}) int {
+	tFirst,_ := first.(int8)
+	tSecond,_ := second.(int8)
 
 	if tFirst > tSecond {
-		return -1
+		return GT
 	}else if tFirst < tSecond{
-		return 1
+		return LT
 	} else {
-		return 0
+		return EQ
 	}
 }
 
-func (c *Compare) compareInt16() int {
+func compareInt16(first, second interface{}) int {
 
-	tFirst,_ := c.first.(int16)
-	tSecond,_ := c.first.(int16)
+	tFirst,_ := first.(int16)
+	tSecond,_ := second.(int16)
 
 	if tFirst > tSecond {
-		return -1
+		return GT
 	}else if tFirst < tSecond{
-		return 1
+		return LT
 	} else {
-		return 0
+		return EQ
 	}
 }
 
-func (c *Compare) compareInt32() int {
+func compareInt32(first, second interface{}) int {
 
-	tFirst,_ := c.first.(int32)
-	tSecond,_ := c.first.(int32)
+	tFirst,_ := first.(int32)
+	tSecond,_ := second.(int32)
 
 	if tFirst > tSecond {
-		return -1
+		return GT
 	}else if tFirst < tSecond{
-		return 1
+		return LT
 	} else {
-		return 0
+		return EQ
 	}
 }
 
-func (c *Compare) compareInt64() int {
+func compareInt64(first, second interface{}) int {
 
-	tFirst,_ := c.first.(int64)
-	tSecond,_ := c.first.(int64)
+	tFirst,_ := first.(int64)
+	tSecond,_ := second.(int64)
 
 	if tFirst > tSecond {
-		return -1
+		return GT
 	}else if tFirst < tSecond{
-		return 1
+		return LT
 	} else {
-		return 0
+		return EQ
 	}
 }
 
-func (c *Compare) compareUint() int {
-	tFirst,_ := c.first.(uint)
-	tSecond,_ := c.first.(uint)
+func compareUint(first, second interface{}) int {
+	tFirst,_ := first.(uint)
+	tSecond,_ := second.(uint)
 
 	if tFirst > tSecond {
-		return -1
+		return GT
 	}else if tFirst < tSecond{
-		return 1
+		return LT
 	} else {
-		return 0
+		return EQ
 	}
 }
 
-func (c *Compare) compareUint8() int {
+func compareUint8(first, second interface{}) int {
 
-	tFirst,_ := c.first.(uint8)
-	tSecond,_ := c.first.(uint8)
+	tFirst,_ := first.(uint8)
+	tSecond,_ := second.(uint8)
 
 	if tFirst > tSecond {
-		return -1
+		return GT
 	}else if tFirst < tSecond{
-		return 1
+		return LT
 	} else {
-		return 0
+		return EQ
 	}
 }
 
-func (c *Compare) compareUint16() int {
+func compareUint16(first, second interface{}) int {
 
-	tFirst,_ := c.first.(uint16)
-	tSecond,_ := c.first.(uint16)
+	tFirst,_ := first.(uint16)
+	tSecond,_ := second.(uint16)
 
 	if tFirst > tSecond {
-		return -1
+		return GT
 	}else if tFirst < tSecond{
-		return 1
+		return LT
 	} else {
-		return 0
+		return EQ
 	}
 }
 
-func (c *Compare) compareUint32() int {
-	tFirst,_ := c.first.(uint32)
-	tSecond,_ := c.first.(uint32)
+func compareUint32(first, second interface{}) int {
+	tFirst,_ := first.(uint32)
+	tSecond,_ := second.(uint32)
 
 	if tFirst > tSecond {
-		return -1
+		return GT
 	}else if tFirst < tSecond{
-		return 1
+		return LT
 	} else {
-		return 0
+		return EQ
 	}
 }
 
-func (c *Compare) compareUint64() int {
-	tFirst,_ := c.first.(uint64)
-	tSecond,_ := c.first.(uint64)
+func compareUint64(first, second interface{}) int {
+	tFirst,_ := first.(uint64)
+	tSecond,_ := second.(uint64)
 
 	if tFirst > tSecond {
-		return -1
+		return GT
 	}else if tFirst < tSecond{
-		return 1
+		return LT
 	} else {
-		return 0
+		return EQ
 	}
 }
 
-func (c *Compare) compareFloat32() int {
-	tFirst,_ := c.first.(float32)
-	tSecond,_ := c.first.(float32)
+func compareFloat32(first, second interface{}) int {
+	tFirst,_ := first.(float32)
+	tSecond,_ := second.(float32)
 
 	if tFirst > tSecond {
-		return -1
+		return GT
 	}else if tFirst < tSecond{
-		return 1
+		return LT
 	} else {
-		return 0
+		return EQ
 	}
 }
 
-func (c *Compare) compareFloat64() int {
-	tFirst,_ := c.first.(float64)
-	tSecond,_ := c.first.(float64)
+func compareFloat64(first, second interface{}) int {
+	tFirst,_ := first.(float64)
+	tSecond,_ := second.(float64)
 
 	if tFirst > tSecond {
-		return -1
+		return GT
 	}else if tFirst < tSecond{
-		return 1
+		return LT
 	} else {
-		return 0
+		return EQ
 	}
 }
 
-func (c *Compare) compareString() int {
-	tFirst,_ := c.first.(string)
-	tSecond,_ := c.first.(string)
+func compareString(first, second interface{}) int {
+	tFirst,_ := first.(string)
+	tSecond,_ := second.(string)
 
 	if tFirst > tSecond {
-		return -1
+		return GT
 	}else if tFirst < tSecond{
-		return 1
+		return LT
 	} else {
-		return 0
+		return EQ
 	}
 }
 
-func NewCompare(first, second interface{}) Comparer{
-	return &Compare{first:first, second:second}
-}
+func CompareBetween(first, second interface{}) int {
 
+	types := reflect.TypeOf(first).Kind()
+	if types != reflect.TypeOf(second).Kind() {
+		panic("compare type must equal")
+	}
+
+	switch reflect.TypeOf(first).Kind() {
+	case reflect.Int:
+		return compareInt(first, second)
+	case reflect.Int8:
+		return compareInt8(first, second)
+	case reflect.Int16:
+		return compareInt16(first, second)
+	case reflect.Int32:
+		return compareInt32(first, second)
+	case reflect.Int64:
+		return compareInt64(first, second)
+	case reflect.Uint:
+		return compareUint(first, second)
+	case reflect.Uint8:
+		return compareUint8(first, second)
+	case reflect.Uint16:
+		return compareUint16(first, second)
+	case reflect.Uint32:
+		return compareUint32(first, second)
+	case reflect.Uint64:
+		return compareUint64(first, second)
+	case reflect.Float32:
+		return compareFloat32(first, second)
+	case reflect.Float64:
+		return compareFloat64(first, second)
+	case reflect.String:
+		return compareString(first, second)
+	default:
+		panic("未识别的类型")
+	}
+}
 
 
