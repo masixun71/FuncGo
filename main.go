@@ -1,19 +1,12 @@
 package main
 
 import (
-	"fmt"
-	"os"
-	"strings"
+	"FuncGo/Func"
 )
 
 func main() {
 
-	root, _ := os.Getwd()
-
-	fmt.Println(root)
-	index := strings.LastIndex(root, "FuncGo")
+	Func.Make()
 
 
-	s := string([]rune(root)[:index + 6])
-	fmt.Println(s) //得到 "a我c"
 }
