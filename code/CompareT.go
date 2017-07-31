@@ -1,5 +1,5 @@
 package code
-func Compareuint8(first, second uint8) int {
+func (t *ts) Compareint16(first, second int16) int {
 	if first > second {
 		return 1
 	}else if first < second{
@@ -8,7 +8,8 @@ func Compareuint8(first, second uint8) int {
 		return 0
 	}
 }
-func Compareuint16(first, second uint16) int {
+
+func (t *ts) Compareint64(first, second int64) int {
 	if first > second {
 		return 1
 	}else if first < second{
@@ -17,7 +18,8 @@ func Compareuint16(first, second uint16) int {
 		return 0
 	}
 }
-func Comparefloat32(first, second float32) int {
+
+func (t *ts) Compareuint(first, second uint) int {
 	if first > second {
 		return 1
 	}else if first < second{
@@ -26,7 +28,8 @@ func Comparefloat32(first, second float32) int {
 		return 0
 	}
 }
-func Compareint16(first, second int16) int {
+
+func (t *ts) Compareuint8(first, second uint8) int {
 	if first > second {
 		return 1
 	}else if first < second{
@@ -35,7 +38,8 @@ func Compareint16(first, second int16) int {
 		return 0
 	}
 }
-func Compareint32(first, second int32) int {
+
+func (t *ts) Compareuint32(first, second uint32) int {
 	if first > second {
 		return 1
 	}else if first < second{
@@ -44,7 +48,8 @@ func Compareint32(first, second int32) int {
 		return 0
 	}
 }
-func Compareint64(first, second int64) int {
+
+func (t *ts) Compareint(first, second int) int {
 	if first > second {
 		return 1
 	}else if first < second{
@@ -53,7 +58,8 @@ func Compareint64(first, second int64) int {
 		return 0
 	}
 }
-func Comparestring(first, second string) int {
+
+func (t *ts) Compareint8(first, second int8) int {
 	if first > second {
 		return 1
 	}else if first < second{
@@ -62,7 +68,8 @@ func Comparestring(first, second string) int {
 		return 0
 	}
 }
-func Compareint(first, second int) int {
+
+func (t *ts) Compareint32(first, second int32) int {
 	if first > second {
 		return 1
 	}else if first < second{
@@ -71,7 +78,8 @@ func Compareint(first, second int) int {
 		return 0
 	}
 }
-func Compareint8(first, second int8) int {
+
+func (t *ts) Compareuint64(first, second uint64) int {
 	if first > second {
 		return 1
 	}else if first < second{
@@ -80,7 +88,8 @@ func Compareint8(first, second int8) int {
 		return 0
 	}
 }
-func Compareuint(first, second uint) int {
+
+func (t *ts) Comparestring(first, second string) int {
 	if first > second {
 		return 1
 	}else if first < second{
@@ -89,7 +98,8 @@ func Compareuint(first, second uint) int {
 		return 0
 	}
 }
-func Compareuint64(first, second uint64) int {
+
+func (t *ts) Compareuint16(first, second uint16) int {
 	if first > second {
 		return 1
 	}else if first < second{
@@ -98,7 +108,8 @@ func Compareuint64(first, second uint64) int {
 		return 0
 	}
 }
-func Comparefloat64(first, second float64) int {
+
+func (t *ts) Comparefloat32(first, second float32) int {
 	if first > second {
 		return 1
 	}else if first < second{
@@ -107,7 +118,8 @@ func Comparefloat64(first, second float64) int {
 		return 0
 	}
 }
-func Compareuint32(first, second uint32) int {
+
+func (t *ts) Comparefloat64(first, second float64) int {
 	if first > second {
 		return 1
 	}else if first < second{
@@ -116,3 +128,4 @@ func Compareuint32(first, second uint32) int {
 		return 0
 	}
 }
+
