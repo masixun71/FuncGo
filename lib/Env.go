@@ -18,3 +18,24 @@ func GetRoot() string  {
 
 	return root
 }
+
+type Path interface {
+	MakePath() string
+}
+
+
+type Pather struct {
+	path string
+}
+
+
+func NewPath(path string) Path {
+	return &Pather{path:path}
+}
+
+
+func (p *Pather) MakePath() string{
+	return GetRoot() + p.path
+}
+
+

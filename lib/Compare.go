@@ -21,7 +21,7 @@ type Comparer interface {
 
 const (
 	GT = 1 //>
-	EQ = 0 //=
+	EQ = 0 //==
 	LT = -1 //<
 )
 

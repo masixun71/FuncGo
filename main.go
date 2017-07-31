@@ -6,7 +6,7 @@ import (
 
 func main() {
 
-	Func.Make()
-
+	makeFiler := Func.NewMakeFiler("/Func/AST.go", "CompareT")
+	makeFiler.MakeCode()
 
 }
