@@ -1,5 +1,6 @@
 package code
-func (f *ValueS) Maxint(values ...int) (int, error) {
+
+func Maxuint8(values ...uint8) (uint8, error) {
 
 	len := len(values)
 
@@ -15,7 +16,7 @@ func (f *ValueS) Maxint(values ...int) (int, error) {
 	return max, nil
 }
 
-func (f *ValueS) Maxint32(values ...int32) (int32, error) {
+func Maxuint32(values ...uint32) (uint32, error) {
 
 	len := len(values)
 
@@ -31,7 +32,7 @@ func (f *ValueS) Maxint32(values ...int32) (int32, error) {
 	return max, nil
 }
 
-func (f *ValueS) Maxint64(values ...int64) (int64, error) {
+func Maxint(values ...int) (int, error) {
 
 	len := len(values)
 
@@ -47,7 +48,7 @@ func (f *ValueS) Maxint64(values ...int64) (int64, error) {
 	return max, nil
 }
 
-func (f *ValueS) Maxuint32(values ...uint32) (uint32, error) {
+func Maxint16(values ...int16) (int16, error) {
 
 	len := len(values)
 
@@ -63,7 +64,7 @@ func (f *ValueS) Maxuint32(values ...uint32) (uint32, error) {
 	return max, nil
 }
 
-func (f *ValueS) Maxint16(values ...int16) (int16, error) {
+func Maxint64(values ...int64) (int64, error) {
 
 	len := len(values)
 
@@ -79,7 +80,7 @@ func (f *ValueS) Maxint16(values ...int16) (int16, error) {
 	return max, nil
 }
 
-func (f *ValueS) Maxuint64(values ...uint64) (uint64, error) {
+func Maxuint(values ...uint) (uint, error) {
 
 	len := len(values)
 
@@ -95,7 +96,7 @@ func (f *ValueS) Maxuint64(values ...uint64) (uint64, error) {
 	return max, nil
 }
 
-func (f *ValueS) Maxfloat64(values ...float64) (float64, error) {
+func Maxuint64(values ...uint64) (uint64, error) {
 
 	len := len(values)
 
@@ -111,7 +112,7 @@ func (f *ValueS) Maxfloat64(values ...float64) (float64, error) {
 	return max, nil
 }
 
-func (f *ValueS) Maxuint8(values ...uint8) (uint8, error) {
+func Maxfloat64(values ...float64) (float64, error) {
 
 	len := len(values)
 
@@ -127,7 +128,7 @@ func (f *ValueS) Maxuint8(values ...uint8) (uint8, error) {
 	return max, nil
 }
 
-func (f *ValueS) Maxuint16(values ...uint16) (uint16, error) {
+func Maxint8(values ...int8) (int8, error) {
 
 	len := len(values)
 
@@ -143,7 +144,7 @@ func (f *ValueS) Maxuint16(values ...uint16) (uint16, error) {
 	return max, nil
 }
 
-func (f *ValueS) Maxfloat32(values ...float32) (float32, error) {
+func Maxint32(values ...int32) (int32, error) {
 
 	len := len(values)
 
@@ -159,7 +160,7 @@ func (f *ValueS) Maxfloat32(values ...float32) (float32, error) {
 	return max, nil
 }
 
-func (f *ValueS) Maxint8(values ...int8) (int8, error) {
+func Maxuint16(values ...uint16) (uint16, error) {
 
 	len := len(values)
 
@@ -175,7 +176,7 @@ func (f *ValueS) Maxint8(values ...int8) (int8, error) {
 	return max, nil
 }
 
-func (f *ValueS) Maxuint(values ...uint) (uint, error) {
+func Maxfloat32(values ...float32) (float32, error) {
 
 	len := len(values)
 
@@ -191,7 +192,7 @@ func (f *ValueS) Maxuint(values ...uint) (uint, error) {
 	return max, nil
 }
 
-func (f *ValueS) Maxstring(values ...string) (string, error) {
+func Maxstring(values ...string) (string, error) {
 
 	len := len(values)
 

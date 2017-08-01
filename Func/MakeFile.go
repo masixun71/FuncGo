@@ -13,9 +13,9 @@ import (
 	"go/ast"
 	"bytes"
 	"reflect"
+	"strings"
 )
 
-var initTsruct bool = false
 var mapFunc map[string]int = make(map[string]int, 2)
 var funcCache map[string]int = make(map[string]int, 2)
 
@@ -25,10 +25,11 @@ type MakeFile interface {
 }
 
 type MakeFiler struct {
-	ReadPath lib.Path
-	FuncName string
-	Template *template.Template
-	Replace  string
+	ReadPath     lib.Path
+	FuncName     string
+	Template     *template.Template
+	Replace      string
+	ObjectString string
 }
 
 func NewMakeFiler(readPath, funcName string, replace interface{}) MakeFile {
@@ -40,26 +41,23 @@ func NewMakeFiler(readPath, funcName string, replace interface{}) MakeFile {
 		str = "T"
 	}
 
-	return &MakeFiler{ReadPath: lib.NewPath(readPath), FuncName: funcName, Replace: str}
+	return &MakeFiler{ReadPath: lib.NewPath(readPath), FuncName: funcName, Replace: str, ObjectString: ""}
 }
 
 func (m *MakeFiler) MakeFunc() {
-
+	m.makeCode()
 }
 
 func (m *MakeFiler) MakeMethod(valueS interface{}) {
 
-	fmt.Println(reflect.TypeOf(valueS))
-
-	//m.makeCode()
+	arrStr := strings.Split(reflect.TypeOf(valueS).String(), ".")
+	m.ObjectString = arrStr[len(arrStr) - 1]
+	m.makeCode()
 }
 
 
 func (m *MakeFiler) makeCode() {
 
-	if !initTsruct {
-		makeTStruct()
-	}
 
 	path := lib.NewPath("/code/" + m.FuncName + ".go")
 	fileName := path.MakePath()
@@ -86,32 +84,40 @@ func (m *MakeFiler) makeCode() {
 		fmt.Println("read file error")
 		return
 	}
-
 	cunS := b[start-1: end]
 
-	var buffer bytes.Buffer
-	buffer.Write(cunS[0:5])
-	buffer.WriteString("(f *ValueS) ")
-	buffer.Write(cunS[5:len(cunS)])
-
-	r := regexp.MustCompile(m.Replace)
-
-	// regexp包也可以用来将字符串的一部分替换为其他的值
-	res := r.ReplaceAllString(buffer.String(), "{{.}}")
-
-	t := template.Must(template.New("test").Parse(res))
-	m.Template = t
-
 	var file *os.File
-
 	if funcCache[fileName] != 1 {
 		if !checkFileIsExist(fileName) { //如果文件存在
 			file, err = os.Create(fileName) //创建文件
 			if err != nil {
 				panic(err)
 			}
-			io.WriteString(file, "package code\n")
+			io.WriteString(file, "package code\n\n")
+			if len(m.ObjectString) != 0 {
+				io.WriteString(file, "")
+			}
 		}
+
+		var buffer bytes.Buffer
+		if len(m.ObjectString) != 0 {
+			buffer.Write(cunS[0:5])
+			buffer.WriteString("(f "+ m.ObjectString + ") ")
+			buffer.Write(cunS[5:len(cunS)])
+		} else {
+			buffer.Write(cunS)
+		}
+
+		r := regexp.MustCompile(m.Replace)
+
+		// regexp包也可以用来将字符串的一部分替换为其他的值
+		res := r.ReplaceAllString(buffer.String(), "{{.}}")
+
+		t := template.Must(template.New("test").Parse(res))
+		m.Template = t
+
+
+
 		arrType := m.checkFuncInit(fileName)
 		for _, str := range arrType {
 			t.Execute(file, str)
@@ -119,6 +125,8 @@ func (m *MakeFiler) makeCode() {
 			io.WriteString(file, "\n\n")
 		}
 	}
+
+
 
 }
 
@@ -152,20 +160,4 @@ func (m *MakeFiler) checkFuncInit(filename string) []string {
 	funcCache[filename] = 1
 
 	return arrType
-}
-
-func makeTStruct() {
-	path := lib.NewPath("/code/" + "TStruct" + ".go")
-	fileName := path.MakePath()
-
-	if !checkFileIsExist(fileName) { //如果文件存在
-		file, err := os.Create(fileName) //创建文件
-		if err != nil {
-			panic(err)
-		}
-		io.WriteString(file, `package code
-type ValueS struct {}`)
-	}
-
-	initTsruct = true
 }

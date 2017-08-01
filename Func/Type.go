@@ -75,3 +75,5 @@ var TYPE_POINTER_STRING map[reflect.Kind]string = map[reflect.Kind]string{
 	Float64Pointer: "*float64",
 	StringPointer: "*string",
 }
+
+type ValueS struct {}
