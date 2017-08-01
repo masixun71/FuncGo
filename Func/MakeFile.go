@@ -24,24 +24,40 @@ type MakeFile interface {
 	MakeMethod(valueS interface{})
 }
 
-type MakeFiler struct {
-	ReadPath     lib.Path
-	FuncName     string
-	Template     *template.Template
-	Replace      string
-	ObjectString string
+type BuildType struct {
+	FuncString string
+	TypeString string
 }
 
-func NewMakeFiler(readPath, funcName string, replace interface{}) MakeFile {
 
-	str := string("TInterface")
+type MakeFiler struct {
+	ReadPath  lib.Path
+	FuncName  string
+	Template  *template.Template
+	ReplaceObject   string
+	BuildType *BuildType
+}
 
-	_, ok := replace.(*T)
-	if ok {
-		str = "T"
+func NewMakeFilerSimple(readPath, funcName string, replace int) MakeFile {
+
+	var buildType BuildType
+
+	switch replace {
+	case TypeT:
+		buildType = BuildType{FuncString:"TF", TypeString:"T"}
+	case TypeInterface:
+		buildType = BuildType{FuncString:"TFInterface", TypeString:"TInterface"}
+	default:
+		panic("error")
 	}
 
-	return &MakeFiler{ReadPath: lib.NewPath(readPath), FuncName: funcName, Replace: str, ObjectString: ""}
+
+	return &MakeFiler{ReadPath: lib.NewPath(readPath), FuncName: funcName, BuildType: &buildType}
+}
+
+
+func NewMakeFiler(readPath, funcName string, buildType *BuildType) MakeFile {
+	return &MakeFiler{ReadPath: lib.NewPath(readPath), FuncName: funcName, BuildType: buildType}
 }
 
 func (m *MakeFiler) MakeFunc() {
@@ -51,7 +67,7 @@ func (m *MakeFiler) MakeFunc() {
 func (m *MakeFiler) MakeMethod(valueS interface{}) {
 
 	arrStr := strings.Split(reflect.TypeOf(valueS).String(), ".")
-	m.ObjectString = arrStr[len(arrStr) - 1]
+	m.ReplaceObject = arrStr[len(arrStr) - 1]
 	m.makeCode()
 }
 
@@ -94,21 +110,21 @@ func (m *MakeFiler) makeCode() {
 				panic(err)
 			}
 			io.WriteString(file, "package code\n\n")
-			if len(m.ObjectString) != 0 {
+			if len(m.ReplaceObject) != 0 {
 				io.WriteString(file, "")
 			}
 		}
 
 		var buffer bytes.Buffer
-		if len(m.ObjectString) != 0 {
+		if len(m.ReplaceObject) != 0 {
 			buffer.Write(cunS[0:5])
-			buffer.WriteString("(f "+ m.ObjectString + ") ")
+			buffer.WriteString("(f "+ m.ReplaceObject + ") ")
 			buffer.Write(cunS[5:len(cunS)])
 		} else {
 			buffer.Write(cunS)
 		}
 
-		r := regexp.MustCompile(m.Replace)
+		r := regexp.MustCompile(m.BuildType.TypeString)
 
 		// regexp包也可以用来将字符串的一部分替换为其他的值
 		res := r.ReplaceAllString(buffer.String(), "{{.}}")
