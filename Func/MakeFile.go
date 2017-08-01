@@ -12,6 +12,7 @@ import (
 	"go/parser"
 	"go/ast"
 	"bytes"
+	"reflect"
 )
 
 var initTsruct bool = false
@@ -19,29 +20,42 @@ var mapFunc map[string]int = make(map[string]int, 2)
 var funcCache map[string]int = make(map[string]int, 2)
 
 type MakeFile interface {
-	MakeCode()
+	MakeFunc()
+	MakeMethod(valueS interface{})
 }
 
 type MakeFiler struct {
 	ReadPath lib.Path
 	FuncName string
 	Template *template.Template
-	Replace string
+	Replace  string
 }
 
 func NewMakeFiler(readPath, funcName string, replace interface{}) MakeFile {
 
-	str := string("T")
+	str := string("TInterface")
 
-	_, ok := replace.(TInterface)
+	_, ok := replace.(*T)
 	if ok {
-		str = "TInterface"
+		str = "T"
 	}
 
 	return &MakeFiler{ReadPath: lib.NewPath(readPath), FuncName: funcName, Replace: str}
 }
 
-func (m *MakeFiler) MakeCode() {
+func (m *MakeFiler) MakeFunc() {
+
+}
+
+func (m *MakeFiler) MakeMethod(valueS interface{}) {
+
+	fmt.Println(reflect.TypeOf(valueS))
+
+	//m.makeCode()
+}
+
+
+func (m *MakeFiler) makeCode() {
 
 	if !initTsruct {
 		makeTStruct()
@@ -57,7 +71,6 @@ func (m *MakeFiler) MakeCode() {
 
 	var start token.Pos
 	var end token.Pos
-
 
 	for _, decl := range f.Decls {
 		fn, ok := decl.(*ast.FuncDecl)

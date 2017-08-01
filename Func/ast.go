@@ -11,6 +11,24 @@ func CompareT(first, second T) int {
 	}
 }
 
+func MaxT(values ...T) (T, error) {
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+
+
 
 func StringTInterface(first TInterface) string {
 	res, ok := first.(string)
