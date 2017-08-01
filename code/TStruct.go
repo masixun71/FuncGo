@@ -1,2 +1,2 @@
 package code
-type ts struct {}
+type ValueS struct {}

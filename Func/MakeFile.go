@@ -11,6 +11,7 @@ import (
 	"go/token"
 	"go/parser"
 	"go/ast"
+	"bytes"
 )
 
 var initTsruct bool = false
@@ -25,10 +26,19 @@ type MakeFiler struct {
 	ReadPath lib.Path
 	FuncName string
 	Template *template.Template
+	Replace string
 }
 
-func NewMakeFiler(readPath, funcName string) MakeFile {
-	return &MakeFiler{ReadPath: lib.NewPath(readPath), FuncName: funcName}
+func NewMakeFiler(readPath, funcName string, replace interface{}) MakeFile {
+
+	str := string("T")
+
+	_, ok := replace.(TInterface)
+	if ok {
+		str = "TInterface"
+	}
+
+	return &MakeFiler{ReadPath: lib.NewPath(readPath), FuncName: funcName, Replace: str}
 }
 
 func (m *MakeFiler) MakeCode() {
@@ -39,7 +49,6 @@ func (m *MakeFiler) MakeCode() {
 
 	path := lib.NewPath("/code/" + m.FuncName + ".go")
 	fileName := path.MakePath()
-
 	fset := token.NewFileSet()
 	f, err := parser.ParseFile(fset, m.ReadPath.MakePath(), nil, parser.ParseComments)
 	if err != nil {
@@ -48,6 +57,7 @@ func (m *MakeFiler) MakeCode() {
 
 	var start token.Pos
 	var end token.Pos
+
 
 	for _, decl := range f.Decls {
 		fn, ok := decl.(*ast.FuncDecl)
@@ -63,12 +73,18 @@ func (m *MakeFiler) MakeCode() {
 		fmt.Println("read file error")
 		return
 	}
-	cunS := string(b[start-1: end])
 
-	r := regexp.MustCompile("T")
+	cunS := b[start-1: end]
+
+	var buffer bytes.Buffer
+	buffer.Write(cunS[0:5])
+	buffer.WriteString("(f *ValueS) ")
+	buffer.Write(cunS[5:len(cunS)])
+
+	r := regexp.MustCompile(m.Replace)
 
 	// regexp包也可以用来将字符串的一部分替换为其他的值
-	res := r.ReplaceAllString(cunS, "{{.}}")
+	res := r.ReplaceAllString(buffer.String(), "{{.}}")
 
 	t := template.Must(template.New("test").Parse(res))
 	m.Template = t
@@ -135,7 +151,7 @@ func makeTStruct() {
 			panic(err)
 		}
 		io.WriteString(file, `package code
-type ts struct {}`)
+type ValueS struct {}`)
 	}
 
 	initTsruct = true

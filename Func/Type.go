@@ -7,6 +7,7 @@ import (
 
 type T int
 
+type TInterface interface {}
 
 
 type Comparer interface {

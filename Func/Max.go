@@ -906,7 +906,7 @@ func maxSliceDo(values ...interface{}) (interface{}, error) {
 	case reflect.Chan:
 		return nil, errors.New("Do not support array values for chan")
 	case reflect.Func:
-		return nil, errors.New("Do not support array values for func")
+		return nil, errors.New("Do not support array values for Func")
 	case reflect.Interface:
 		return nil, errors.New("Do not support array values for interface")
 	case reflect.Map:
