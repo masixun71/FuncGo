@@ -23,7 +23,7 @@ type MakeFile interface {
 	MakeFuncSourceWithString(str string) (bool, error)
 	MakeFuncSourceWithFile(reader *os.File) (bool, error)
 	MakeFuncSourceWithFunc(readPath lib.Path, funcName string) (bool, error)
-	MakeMethod(valueS interface{}, readPath lib.Path, funcName string) (bool, error)
+	MakeMethod(valueS interface{}, usePointer bool, readPath lib.Path, funcName string) (bool, error)
 }
 
 type BuildType struct {
@@ -72,10 +72,14 @@ func NewMakeFiler(buildType *BuildType, outputDir string) (MakeFile, error) {
 	return &MakeFiler{BuildType: buildType, OutputDir: path}, nil
 }
 
-func (m *MakeFiler) MakeMethod(valueS interface{}, readPath lib.Path, funcName string) (bool, error) {
+func (m *MakeFiler) MakeMethod(valueS interface{}, usePointer bool, readPath lib.Path, funcName string) (bool, error) {
 
-	arrStr := strings.Split(reflect.TypeOf(valueS).String(), ".")
-	m.ReplaceObject = arrStr[len(arrStr)-1]
+	reflect.TypeOf(valueS).String()
+	if usePointer {
+		m.ReplaceObject = reflect.TypeOf(valueS).String()
+	} else {
+		m.ReplaceObject = strings.TrimLeft(reflect.TypeOf(valueS).String(), "*")
+	}
 	return m.MakeFuncSourceWithFunc(readPath, funcName)
 }
 

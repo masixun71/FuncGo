@@ -22,7 +22,10 @@ func main() {
 	//	fmt.Println(1,s)
 	//}
 
-	makeFiler,err := Func.NewMakeFilerSimple(Func.TypeT, "/code")
+	//makeFiler,err := Func.NewMakeFilerSimple(Func.TypeT, "/code")
+
+	makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code")
+
 	if err != nil {
 		panic(err)
 	}
@@ -37,7 +40,7 @@ func main() {
 
 	path := lib.NewPath("/Func/ast.go")
 
-	_, err = makeFiler.MakeFuncSourceWithFunc(path, "MaxTF")
+	_, err = makeFiler.MakeMethod(new(lib.Pather), true, path, "MaxTF")
 	if err != nil {
 		panic(err)
 	}
