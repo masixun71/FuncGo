@@ -40,7 +40,7 @@ func main() {
 
 	path := lib.NewPath("/Func/ast.go")
 
-	_, err = makeFiler.MakeMethod(new(lib.Pather), true, path, "MaxTF")
+	_, err = makeFiler.MakeMethodSourceWithFunc(new(lib.Pather), true, path, "MaxTF")
 	if err != nil {
 		panic(err)
 	}

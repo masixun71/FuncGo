@@ -23,7 +23,9 @@ type MakeFile interface {
 	MakeFuncSourceWithString(str string) (bool, error)
 	MakeFuncSourceWithFile(reader *os.File) (bool, error)
 	MakeFuncSourceWithFunc(readPath lib.Path, funcName string) (bool, error)
-	MakeMethod(valueS interface{}, usePointer bool, readPath lib.Path, funcName string) (bool, error)
+	MakeMethodSourceWithFunc(valueS interface{}, usePointer bool, readPath lib.Path, funcName string) (bool, error)
+	MakeMethodSourceWithString(valueS interface{}, usePointer bool, str string) (bool, error)
+	MakeMethodSourceWithFile(valueS interface{}, usePointer bool, reader *os.File) (bool, error)
 }
 
 type BuildType struct {
@@ -72,16 +74,33 @@ func NewMakeFiler(buildType *BuildType, outputDir string) (MakeFile, error) {
 	return &MakeFiler{BuildType: buildType, OutputDir: path}, nil
 }
 
-func (m *MakeFiler) MakeMethod(valueS interface{}, usePointer bool, readPath lib.Path, funcName string) (bool, error) {
+func (m *MakeFiler) MakeMethodSourceWithFunc(valueS interface{}, usePointer bool, readPath lib.Path, funcName string) (bool, error) {
+	m.setReplaceObject(valueS, usePointer)
 
+	return m.MakeFuncSourceWithFunc(readPath, funcName)
+}
+
+func (m *MakeFiler) MakeMethodSourceWithString(valueS interface{}, usePointer bool, str string) (bool, error) {
+	m.setReplaceObject(valueS, usePointer)
+
+	return m.MakeFuncSourceWithString(str)
+}
+
+func (m *MakeFiler) MakeMethodSourceWithFile(valueS interface{}, usePointer bool, reader *os.File) (bool, error) {
+	m.setReplaceObject(valueS, usePointer)
+
+	return m.MakeFuncSourceWithFile(reader)
+}
+
+func (m *MakeFiler) setReplaceObject(valueS interface{}, usePointer bool) {
 	reflect.TypeOf(valueS).String()
 	if usePointer {
 		m.ReplaceObject = reflect.TypeOf(valueS).String()
 	} else {
 		m.ReplaceObject = strings.TrimLeft(reflect.TypeOf(valueS).String(), "*")
 	}
-	return m.MakeFuncSourceWithFunc(readPath, funcName)
 }
+
 
 func (m *MakeFiler) MakeFuncSourceWithString(str string) (bool, error) {
 	fset := token.NewFileSet()
