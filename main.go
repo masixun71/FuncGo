@@ -22,7 +22,10 @@ func main() {
 	//	fmt.Println(1,s)
 	//}
 
-	makeFiler,_ := Func.NewMakeFilerSimple(Func.TypeT)
+	makeFiler,err := Func.NewMakeFilerSimple(Func.TypeT, "/code")
+	if err != nil {
+		panic(err)
+	}
 
 	//file, err := os.OpenFile(lib.GetRoot()+"/Func/ast.go", os.O_RDWR|os.O_CREATE, 0777)
 	//

@@ -34,9 +34,10 @@ type BuildType struct {
 type MakeFiler struct {
 	ReplaceObject string
 	BuildType     *BuildType
+	OutputDir     lib.Path
 }
 
-func NewMakeFilerSimple(replace int) (MakeFile, error) {
+func NewMakeFilerSimple(replace int, outputDir string) (MakeFile, error) {
 
 	var buildType BuildType
 
@@ -49,16 +50,26 @@ func NewMakeFilerSimple(replace int) (MakeFile, error) {
 		return nil, errors.New("Unknown Type")
 	}
 
-	return &MakeFiler{BuildType: &buildType}, nil
+	path := lib.NewPath(outputDir)
+	if !path.IsDir() {
+		return nil, errors.New("outputDir can not find or not dir")
+	}
+
+	return &MakeFiler{BuildType: &buildType, OutputDir:path}, nil
 }
 
-func NewMakeFiler(buildType *BuildType) (MakeFile, error) {
+func NewMakeFiler(buildType *BuildType, outputDir string) (MakeFile, error) {
 
 	if strings.ToUpper(buildType.FuncString) == strings.ToUpper(buildType.TypeString) {
 		return nil, errors.New("buildType.FuncString must not equal buildType.TypeString")
 	}
 
-	return &MakeFiler{BuildType: buildType}, nil
+	path := lib.NewPath(outputDir)
+	if !path.IsDir() {
+		return nil, errors.New("outputDir can not find or not dir")
+	}
+
+	return &MakeFiler{BuildType: buildType, OutputDir:path}, nil
 }
 
 func (m *MakeFiler) MakeMethod(valueS interface{}, readPath lib.Path, funcName string) (bool, error) {
@@ -149,7 +160,7 @@ func (m *MakeFiler) makeFileByString(cunS []byte, fileName, funcName string) (bo
 			if err != nil {
 				return false, err
 			}
-			io.WriteString(file, "package code\n\n")
+			io.WriteString(file, "package " + strings.Trim(m.OutputDir.GetPath(), "/") +"\n\n")
 			if len(m.ReplaceObject) != 0 {
 				io.WriteString(file, "")
 			}

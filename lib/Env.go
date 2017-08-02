@@ -38,10 +38,16 @@ func GetRoot() string {
 
 type Path interface {
 	GetPathByRoot() string
+	IsDir() bool
+	GetPath() string
 }
 
 type Pather struct {
 	path string
+}
+
+func (p *Pather) GetPath() string  {
+	return p.path
 }
 
 func NewPath(path string) Path {
@@ -50,4 +56,22 @@ func NewPath(path string) Path {
 
 func (p *Pather) GetPathByRoot() string {
 	return GetRoot() + p.path
+}
+
+func (p *Pather) IsDir() bool {
+	file, err := os.Open(p.GetPathByRoot())
+	if err != nil {
+		return false
+	}
+	defer file.Close()
+
+	fi, err := file.Stat()
+	if err != nil {
+		return false
+	}
+	if fi.IsDir() {
+		return true
+	} else {
+		return false
+	}
 }

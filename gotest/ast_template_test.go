@@ -9,7 +9,7 @@ import (
 
 func Test_simple_string(t *testing.T) {
 
-	makeFiler,_ := Func.NewMakeFilerSimple(Func.TypeT)
+	makeFiler,_ := Func.NewMakeFilerSimple(Func.TypeT, "/code")
 
 	_,err := makeFiler.MakeFuncSourceWithString(`
 		package Func
@@ -38,7 +38,7 @@ func Test_simple_string(t *testing.T) {
 
 func Test_simple_file(t *testing.T) {
 
-	makeFiler,_ := Func.NewMakeFilerSimple(Func.TypeT)
+	makeFiler,_ := Func.NewMakeFilerSimple(Func.TypeT, "/code")
 
 	file, err := os.OpenFile(lib.GetRoot()+"/Func/ast.go", os.O_RDWR|os.O_CREATE, 0777)
 	if err != nil {
@@ -52,7 +52,7 @@ func Test_simple_file(t *testing.T) {
 }
 
 func Test_simple_func(t *testing.T) {
-	makeFiler,_ := Func.NewMakeFilerSimple(Func.TypeT)
+	makeFiler,_ := Func.NewMakeFilerSimple(Func.TypeT, "/code")
 
 	path := lib.NewPath("/Func/ast.go")
 
