@@ -37,7 +37,7 @@ func GetRoot() string {
 }
 
 type Path interface {
-	MakePath() string
+	GetPathByRoot() string
 }
 
 type Pather struct {
@@ -48,6 +48,6 @@ func NewPath(path string) Path {
 	return &Pather{path: path}
 }
 
-func (p *Pather) MakePath() string {
+func (p *Pather) GetPathByRoot() string {
 	return GetRoot() + p.path
 }

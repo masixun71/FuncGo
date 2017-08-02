@@ -57,7 +57,7 @@ func NewMakeFilerSimple(readPath, funcName string, replace int) MakeFile {
 
 func NewMakeFiler(readPath, funcName string, buildType *BuildType) MakeFile {
 
-	if buildType.FuncString == buildType.TypeString {
+	if strings.ToUpper(buildType.FuncString) == strings.ToUpper(buildType.TypeString) {
 		panic("buildType.FuncString must not equal buildType.TypeString")
 	}
 
@@ -78,9 +78,9 @@ func (m *MakeFiler) MakeMethod(valueS interface{}) {
 
 func (m *MakeFiler) makeCode() {
 	path := lib.NewPath("/code/" + m.FuncName + ".go")
-	fileName := path.MakePath()
+	fileName := path.GetPathByRoot()
 	fset := token.NewFileSet()
-	f, err := parser.ParseFile(fset, m.ReadPath.MakePath(), nil, parser.ParseComments)
+	f, err := parser.ParseFile(fset, m.ReadPath.GetPathByRoot(), nil, parser.ParseComments)
 	if err != nil {
 		panic(err)
 	}
@@ -97,7 +97,7 @@ func (m *MakeFiler) makeCode() {
 		}
 	}
 
-	b, e := ioutil.ReadFile(m.ReadPath.MakePath())
+	b, e := ioutil.ReadFile(m.ReadPath.GetPathByRoot())
 	if e != nil {
 		fmt.Println("read file error")
 		return
