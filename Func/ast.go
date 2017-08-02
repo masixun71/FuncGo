@@ -11,7 +11,7 @@ func CompareT(first, second T) int {
 	}
 }
 
-func MaxT(values ...T) (T, error) {
+func MaxTF(values ...T) (T, error) {
 
 	len := len(values)
 

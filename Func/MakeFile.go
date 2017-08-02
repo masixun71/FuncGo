@@ -33,7 +33,6 @@ type BuildType struct {
 type MakeFiler struct {
 	ReadPath  lib.Path
 	FuncName  string
-	Template  *template.Template
 	ReplaceObject   string
 	BuildType *BuildType
 }
@@ -57,6 +56,11 @@ func NewMakeFilerSimple(readPath, funcName string, replace int) MakeFile {
 
 
 func NewMakeFiler(readPath, funcName string, buildType *BuildType) MakeFile {
+
+	if buildType.FuncString == buildType.TypeString {
+		panic("buildType.FuncString must not equal buildType.TypeString")
+	}
+
 	return &MakeFiler{ReadPath: lib.NewPath(readPath), FuncName: funcName, BuildType: buildType}
 }
 
@@ -73,8 +77,6 @@ func (m *MakeFiler) MakeMethod(valueS interface{}) {
 
 
 func (m *MakeFiler) makeCode() {
-
-
 	path := lib.NewPath("/code/" + m.FuncName + ".go")
 	fileName := path.MakePath()
 	fset := token.NewFileSet()
@@ -100,18 +102,29 @@ func (m *MakeFiler) makeCode() {
 		fmt.Println("read file error")
 		return
 	}
-	cunS := b[start-1: end]
+
+	m.makeFileByString(b[start-1: end], fileName)
+}
+
+func (m *MakeFiler) makeFileByString(cunS []byte,fileName string) bool {
 
 	var file *os.File
 	if funcCache[fileName] != 1 {
 		if !checkFileIsExist(fileName) { //如果文件存在
-			file, err = os.Create(fileName) //创建文件
+			tmpFile, err := os.Create(fileName) //创建文件
+			file = tmpFile
 			if err != nil {
 				panic(err)
 			}
 			io.WriteString(file, "package code\n\n")
 			if len(m.ReplaceObject) != 0 {
 				io.WriteString(file, "")
+			}
+		} else {
+			tmpFile, err := os.Open(fileName)
+			file = tmpFile
+			if err != nil {
+				panic(err)
 			}
 		}
 
@@ -124,27 +137,27 @@ func (m *MakeFiler) makeCode() {
 			buffer.Write(cunS)
 		}
 
-		r := regexp.MustCompile(m.BuildType.TypeString)
 
-		// regexp包也可以用来将字符串的一部分替换为其他的值
-		res := r.ReplaceAllString(buffer.String(), "{{.}}")
-
-		t := template.Must(template.New("test").Parse(res))
-		m.Template = t
-
-
+		tem := m.getTemplate(buffer.String())
 
 		arrType := m.checkFuncInit(fileName)
-		for _, str := range arrType {
-			t.Execute(file, str)
-			mapFunc[m.FuncName+str] = 1
+		for _, buildType := range arrType {
+			err := tem.Execute(file, buildType)
+			if err != nil {
+				panic(err)
+			}
+			mapFunc[m.FuncName+buildType.FuncString] = 1
 			io.WriteString(file, "\n\n")
 		}
 	}
 
-
-
+	return true
 }
+
+
+
+
+
 
 func checkFileIsExist(filename string) (bool) {
 	var exist = true;
@@ -154,14 +167,30 @@ func checkFileIsExist(filename string) (bool) {
 	return exist;
 }
 
-func (m *MakeFiler) checkFuncInit(filename string) []string {
+func (m *MakeFiler) getTemplate(str string) *template.Template {
+	rF := regexp.MustCompile(m.BuildType.FuncString)
+
+	// regexp包也可以用来将字符串的一部分替换为其他的值
+	resString := rF.ReplaceAllString(str, "{{.FuncString}}")
+
+	rT := regexp.MustCompile(m.BuildType.TypeString)
+
+	// regexp包也可以用来将字符串的一部分替换为其他的值
+	res := rT.ReplaceAllString(resString, "{{.TypeString}}")
+
+	return template.Must(template.New("test").Parse(res))
+}
+
+
+
+func (m *MakeFiler) checkFuncInit(filename string) []BuildType {
 	fset := token.NewFileSet()
 	f, err := parser.ParseFile(fset, filename, nil, parser.ParseComments)
 	if err != nil {
 		panic(err)
 	}
 
-	arrType := make([]string, 0)
+	arrType := make([]BuildType, 0)
 
 	mapObject := f.Scope.Objects
 	for _, str := range TYPE_STRING {
@@ -169,7 +198,7 @@ func (m *MakeFiler) checkFuncInit(filename string) []string {
 		if ok {
 			mapFunc[m.FuncName+str] = 1
 		} else {
-			arrType = append(arrType, str)
+			arrType = append(arrType, BuildType{TypeString:str, FuncString:TypeToFuncName(str)})
 		}
 	}
 
