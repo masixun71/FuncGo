@@ -55,7 +55,7 @@ func NewMakeFilerSimple(replace int, outputDir string) (MakeFile, error) {
 		return nil, errors.New("outputDir can not find or not dir")
 	}
 
-	return &MakeFiler{BuildType: &buildType, OutputDir:path}, nil
+	return &MakeFiler{BuildType: &buildType, OutputDir: path}, nil
 }
 
 func NewMakeFiler(buildType *BuildType, outputDir string) (MakeFile, error) {
@@ -69,7 +69,7 @@ func NewMakeFiler(buildType *BuildType, outputDir string) (MakeFile, error) {
 		return nil, errors.New("outputDir can not find or not dir")
 	}
 
-	return &MakeFiler{BuildType: buildType, OutputDir:path}, nil
+	return &MakeFiler{BuildType: buildType, OutputDir: path}, nil
 }
 
 func (m *MakeFiler) MakeMethod(valueS interface{}, readPath lib.Path, funcName string) (bool, error) {
@@ -160,7 +160,7 @@ func (m *MakeFiler) makeFileByString(cunS []byte, fileName, funcName string) (bo
 			if err != nil {
 				return false, err
 			}
-			io.WriteString(file, "package " + strings.Trim(m.OutputDir.GetPath(), "/") +"\n\n")
+			io.WriteString(file, "package "+strings.Trim(m.OutputDir.GetPath(), "/")+"\n\n")
 			if len(m.ReplaceObject) != 0 {
 				io.WriteString(file, "")
 			}
@@ -223,7 +223,7 @@ func (m *MakeFiler) getTemplate(str string) *template.Template {
 }
 
 func (m *MakeFiler) getFileName(funcName string) string {
-	path := lib.NewPath("/code/" + funcName + ".go")
+	path := lib.NewPath(strings.TrimRight(m.OutputDir.GetPath(), "/") + "/" + funcName + ".go")
 	return path.GetPathByRoot()
 }
 
