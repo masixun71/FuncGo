@@ -1,7 +1,7 @@
 package Func
 
 
-func CompareT(first, second T) int {
+func CompareTF(first, second T) int {
 	if first > second {
 		return 1
 	}else if first < second{
@@ -30,7 +30,7 @@ func MaxTF(values ...T) (T, error) {
 
 
 
-func StringTInterface(first TInterface) string {
+func StringTFInterface(first TInterface) string {
 	res, ok := first.(string)
 	if ok {
 		return string(res)

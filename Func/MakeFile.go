@@ -2,7 +2,6 @@ package Func
 
 import (
 	"FuncGo/lib"
-	"fmt"
 	"io/ioutil"
 	"regexp"
 	"text/template"
@@ -14,14 +13,17 @@ import (
 	"bytes"
 	"reflect"
 	"strings"
+	"errors"
 )
 
 var mapFunc map[string]int = make(map[string]int, 2)
 var funcCache map[string]int = make(map[string]int, 2)
 
 type MakeFile interface {
-	MakeFunc()
-	MakeMethod(valueS interface{})
+	MakeFuncSourceWithString(str string) (bool, error)
+	MakeFuncSourceWithFile(reader *os.File) (bool, error)
+	MakeFuncSourceWithFunc(readPath lib.Path, funcName string) (bool, error)
+	MakeMethod(valueS interface{}, readPath lib.Path, funcName string) (bool, error)
 }
 
 type BuildType struct {
@@ -29,60 +31,91 @@ type BuildType struct {
 	TypeString string
 }
 
-
 type MakeFiler struct {
-	ReadPath  lib.Path
-	FuncName  string
-	ReplaceObject   string
-	BuildType *BuildType
+	ReplaceObject string
+	BuildType     *BuildType
 }
 
-func NewMakeFilerSimple(readPath, funcName string, replace int) MakeFile {
+func NewMakeFilerSimple(replace int) (MakeFile, error) {
 
 	var buildType BuildType
 
 	switch replace {
 	case TypeT:
-		buildType = BuildType{FuncString:"TF", TypeString:"T"}
+		buildType = BuildType{FuncString: "TF", TypeString: "T"}
 	case TypeInterface:
-		buildType = BuildType{FuncString:"TFInterface", TypeString:"TInterface"}
+		buildType = BuildType{FuncString: "TFInterface", TypeString: "TInterface"}
 	default:
-		panic("error")
+		return nil, errors.New("Unknown Type")
 	}
 
-
-	return &MakeFiler{ReadPath: lib.NewPath(readPath), FuncName: funcName, BuildType: &buildType}
+	return &MakeFiler{BuildType: &buildType}, nil
 }
 
-
-func NewMakeFiler(readPath, funcName string, buildType *BuildType) MakeFile {
+func NewMakeFiler(buildType *BuildType) (MakeFile, error) {
 
 	if strings.ToUpper(buildType.FuncString) == strings.ToUpper(buildType.TypeString) {
-		panic("buildType.FuncString must not equal buildType.TypeString")
+		return nil, errors.New("buildType.FuncString must not equal buildType.TypeString")
 	}
 
-	return &MakeFiler{ReadPath: lib.NewPath(readPath), FuncName: funcName, BuildType: buildType}
+	return &MakeFiler{BuildType: buildType}, nil
 }
 
-func (m *MakeFiler) MakeFunc() {
-	m.makeCode()
-}
-
-func (m *MakeFiler) MakeMethod(valueS interface{}) {
+func (m *MakeFiler) MakeMethod(valueS interface{}, readPath lib.Path, funcName string) (bool, error) {
 
 	arrStr := strings.Split(reflect.TypeOf(valueS).String(), ".")
-	m.ReplaceObject = arrStr[len(arrStr) - 1]
-	m.makeCode()
+	m.ReplaceObject = arrStr[len(arrStr)-1]
+	return m.MakeFuncSourceWithFunc(readPath, funcName)
 }
 
-
-func (m *MakeFiler) makeCode() {
-	path := lib.NewPath("/code/" + m.FuncName + ".go")
-	fileName := path.GetPathByRoot()
+func (m *MakeFiler) MakeFuncSourceWithString(str string) (bool, error) {
 	fset := token.NewFileSet()
-	f, err := parser.ParseFile(fset, m.ReadPath.GetPathByRoot(), nil, parser.ParseComments)
+	f, err := parser.ParseFile(fset, "", str, parser.ParseComments)
 	if err != nil {
-		panic(err)
+		return false, err
+	}
+	return m.makeCodeForAst(f, []byte(str))
+}
+func (m *MakeFiler) MakeFuncSourceWithFile(reader *os.File) (bool, error) {
+
+	fset := token.NewFileSet()
+	f, err := parser.ParseFile(fset, "", reader, parser.ParseComments)
+	if err != nil {
+		return false, err
+	}
+
+	b, e := ioutil.ReadFile(reader.Name())
+	if e != nil {
+		return false, err
+	}
+
+	return m.makeCodeForAst(f, b)
+}
+
+func (m *MakeFiler) makeCodeForAst(f *ast.File, buf []byte) (bool, error) {
+	for _, decl := range f.Decls {
+		fn, ok := decl.(*ast.FuncDecl)
+		if ok {
+			_, err := m.makeCode(buf[fn.Type.Func-1: fn.Body.Rbrace], fn.Name.Name)
+			if err != nil {
+				return false, err
+			}
+		}
+	}
+
+	return true, nil
+}
+
+func (m *MakeFiler) MakeFuncSourceWithFunc(readPath lib.Path, funcName string) (bool, error) {
+	b, err := ioutil.ReadFile(readPath.GetPathByRoot())
+	if err != nil {
+		return false, err
+	}
+
+	fset := token.NewFileSet()
+	f, err := parser.ParseFile(fset, readPath.GetPathByRoot(), nil, parser.ParseComments)
+	if err != nil {
+		return false, err
 	}
 
 	var start token.Pos
@@ -90,74 +123,71 @@ func (m *MakeFiler) makeCode() {
 
 	for _, decl := range f.Decls {
 		fn, ok := decl.(*ast.FuncDecl)
-		if ok && fn.Name.Name == m.FuncName {
+		if ok && fn.Name.Name == funcName {
 
 			start = fn.Type.Func
 			end = fn.Body.Rbrace
 		}
 	}
 
-	b, e := ioutil.ReadFile(m.ReadPath.GetPathByRoot())
-	if e != nil {
-		fmt.Println("read file error")
-		return
-	}
-
-	m.makeFileByString(b[start-1: end], fileName)
+	return m.makeCode(b[start-1: end], funcName)
 }
 
-func (m *MakeFiler) makeFileByString(cunS []byte,fileName string) bool {
+func (m *MakeFiler) makeCode(str []byte, funcName string) (bool, error) {
+	fileName := m.getFileName(funcName)
+	return m.makeFileByString(str, fileName, funcName)
+}
+
+func (m *MakeFiler) makeFileByString(cunS []byte, fileName, funcName string) (bool, error) {
 
 	var file *os.File
+	defer file.Close()
 	if funcCache[fileName] != 1 {
 		if !checkFileIsExist(fileName) { //如果文件存在
 			tmpFile, err := os.Create(fileName) //创建文件
 			file = tmpFile
 			if err != nil {
-				panic(err)
+				return false, err
 			}
 			io.WriteString(file, "package code\n\n")
 			if len(m.ReplaceObject) != 0 {
 				io.WriteString(file, "")
 			}
 		} else {
-			tmpFile, err := os.Open(fileName)
+			tmpFile, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
 			file = tmpFile
 			if err != nil {
-				panic(err)
+				return false, err
 			}
 		}
 
 		var buffer bytes.Buffer
 		if len(m.ReplaceObject) != 0 {
 			buffer.Write(cunS[0:5])
-			buffer.WriteString("(f "+ m.ReplaceObject + ") ")
+			buffer.WriteString("(f " + m.ReplaceObject + ") ")
 			buffer.Write(cunS[5:len(cunS)])
 		} else {
 			buffer.Write(cunS)
 		}
 
-
 		tem := m.getTemplate(buffer.String())
 
-		arrType := m.checkFuncInit(fileName)
+		arrType, err := m.checkFuncInit(fileName, funcName)
+		if err != nil {
+			return false, err
+		}
 		for _, buildType := range arrType {
 			err := tem.Execute(file, buildType)
 			if err != nil {
-				panic(err)
+				return false, err
 			}
-			mapFunc[m.FuncName+buildType.FuncString] = 1
+			mapFunc[funcName+buildType.FuncString] = 1
 			io.WriteString(file, "\n\n")
 		}
 	}
 
-	return true
+	return true, nil
 }
-
-
-
-
-
 
 func checkFileIsExist(filename string) (bool) {
 	var exist = true;
@@ -181,28 +211,33 @@ func (m *MakeFiler) getTemplate(str string) *template.Template {
 	return template.Must(template.New("test").Parse(res))
 }
 
+func (m *MakeFiler) getFileName(funcName string) string {
+	path := lib.NewPath("/code/" + funcName + ".go")
+	return path.GetPathByRoot()
+}
 
-
-func (m *MakeFiler) checkFuncInit(filename string) []BuildType {
+func (m *MakeFiler) checkFuncInit(filename, funcName string) ([]BuildType, error) {
 	fset := token.NewFileSet()
 	f, err := parser.ParseFile(fset, filename, nil, parser.ParseComments)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	arrType := make([]BuildType, 0)
 
+	rF := regexp.MustCompile(m.BuildType.FuncString)
 	mapObject := f.Scope.Objects
 	for _, str := range TYPE_STRING {
-		_, ok := mapObject[m.FuncName+str]
+		realFuncName := rF.ReplaceAllString(funcName, TypeToFuncName(str))
+		_, ok := mapObject[realFuncName]
 		if ok {
-			mapFunc[m.FuncName+str] = 1
+			mapFunc[realFuncName] = 1
 		} else {
-			arrType = append(arrType, BuildType{TypeString:str, FuncString:TypeToFuncName(str)})
+			arrType = append(arrType, BuildType{TypeString: str, FuncString: TypeToFuncName(str)})
 		}
 	}
 
 	funcCache[filename] = 1
 
-	return arrType
+	return arrType, nil
 }
