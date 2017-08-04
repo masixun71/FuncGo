@@ -132,3 +132,52 @@ func Test_method_func(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func Test_method_file(t *testing.T) {
+	makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code")
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	file, err := os.OpenFile(lib.GetRoot()+"/Func/ast.go", os.O_RDWR|os.O_CREATE, 0777)
+	if err != nil {
+		t.Error(err)
+	}
+
+	_, err = makeFiler.MakeMethodSourceWithFile(new(lib.Pather), true, file)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+
+func Test_method_string(t *testing.T) {
+	makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code")
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	_, err = makeFiler.MakeMethodSourceWithString(new(lib.Pather), true, `
+		package Func
+		func MaxTF(values ...T) (T, error) {
+
+		len := len(values)
+
+		max := values[0]
+		for i := 1; i < len; i++ {
+			tmpvalue := values[i]
+
+			if max < tmpvalue {
+				max = tmpvalue
+			}
+		}
+
+		return max, nil
+	}`)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
