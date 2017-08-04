@@ -88,13 +88,18 @@ type ToString interface {
 }
 
 type TypeDependent interface {
-
+	GetMap() *Tmap
 }
 
 
 type TypeDependenter struct {
 	Dependents *Tmap
 }
+
+func (T *TypeDependenter) GetMap() *Tmap {
+	return T.Dependents
+}
+
 
 
 func NewTmapByString(values ...string) TypeDependent {
@@ -108,8 +113,10 @@ func NewTmapByString(values ...string) TypeDependent {
 	return &TypeDependenter{Dependents:&tmap}
 }
 
+
+
 func TmapByBasicType() TypeDependent {
-	return TypeDependentByBasicType
+	return &TypeDependentByBasicType
 }
 
 

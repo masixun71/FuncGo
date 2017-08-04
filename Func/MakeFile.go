@@ -14,8 +14,15 @@ import (
 	"reflect"
 	"strings"
 	"errors"
-	"fmt"
 )
+
+const (
+	None		 = 0
+	MultiplePointers = 1
+	FuncGlobalSwitch = 1 << 1
+)
+
+
 
 var mapFunc map[string]int = make(map[string]int, 2)
 var funcCache map[string]int = make(map[string]int, 2)
@@ -75,12 +82,12 @@ func NewMakeFilerByBasicType(replace int, outputDir string) (MakeFile, error) {
 
 	buildType, path := checkMakeFilerForBuildType(replace, outputDir)
 
-	return &MakeFiler{BuildType: buildType, OutputDir: path, UsePointer: false, TMaper: TypeDependentByBasicType}, nil
+	return &MakeFiler{BuildType: buildType, OutputDir: path, UsePointer: false, TMaper: TmapByBasicType()}, nil
 }
 
 func NewMakeFilerByBasicPointerType(replace int, outputDir string) (MakeFile, error) {
 	buildType, path := checkMakeFilerForBuildType(replace, outputDir)
-	return &MakeFiler{BuildType: buildType, OutputDir: path, UsePointer: true, TMaper: TypeDependentByBasicType}, nil
+	return &MakeFiler{BuildType: buildType, OutputDir: path, UsePointer: true, TMaper: TmapByBasicType()}, nil
 }
 
 func NewMakeFilerSimple(replace int, outputDir string, usePointer bool, tmap TypeDependent) (MakeFile, error) {
@@ -298,7 +305,7 @@ func (m *MakeFiler) checkFuncInit(filename, funcName string) ([]BuildType, error
 
 	rF := regexp.MustCompile(m.BuildType.FuncString)
 	mapObject := f.Scope.Objects
-	for _, str := range TYPE_STRING {
+	for _, str := range *m.TMaper.GetMap() {
 		realFuncName := rF.ReplaceAllString(funcName, TypeToFuncName(str))
 		_, ok := mapObject[realFuncName]
 		if ok {

@@ -1,15 +1,6 @@
 package code
 
-func StringUint8Interface(first uint8Interface) string {
-	res, ok := first.(string)
-	if ok {
-		return string(res)
-	}
-
-	return ""
-}
-
-func StringFloat64Interface(first float64Interface) string {
+func StringInt16Interface(first int16Interface) string {
 	res, ok := first.(string)
 	if ok {
 		return string(res)
@@ -27,7 +18,7 @@ func StringUint32Interface(first uint32Interface) string {
 	return ""
 }
 
-func StringStringInterface(first stringInterface) string {
+func StringFloat32Interface(first float32Interface) string {
 	res, ok := first.(string)
 	if ok {
 		return string(res)
@@ -45,7 +36,7 @@ func StringIntInterface(first intInterface) string {
 	return ""
 }
 
-func StringInt8Interface(first int8Interface) string {
+func StringFloat64Interface(first float64Interface) string {
 	res, ok := first.(string)
 	if ok {
 		return string(res)
@@ -54,7 +45,7 @@ func StringInt8Interface(first int8Interface) string {
 	return ""
 }
 
-func StringUint16Interface(first uint16Interface) string {
+func StringInt64Interface(first int64Interface) string {
 	res, ok := first.(string)
 	if ok {
 		return string(res)
@@ -63,7 +54,7 @@ func StringUint16Interface(first uint16Interface) string {
 	return ""
 }
 
-func StringUintInterface(first uintInterface) string {
+func StringUint8Interface(first uint8Interface) string {
 	res, ok := first.(string)
 	if ok {
 		return string(res)
@@ -81,7 +72,7 @@ func StringUint64Interface(first uint64Interface) string {
 	return ""
 }
 
-func StringFloat32Interface(first float32Interface) string {
+func StringStringInterface(first stringInterface) string {
 	res, ok := first.(string)
 	if ok {
 		return string(res)
@@ -90,7 +81,7 @@ func StringFloat32Interface(first float32Interface) string {
 	return ""
 }
 
-func StringInt16Interface(first int16Interface) string {
+func StringInt8Interface(first int8Interface) string {
 	res, ok := first.(string)
 	if ok {
 		return string(res)
@@ -108,7 +99,16 @@ func StringInt32Interface(first int32Interface) string {
 	return ""
 }
 
-func StringInt64Interface(first int64Interface) string {
+func StringUintInterface(first uintInterface) string {
+	res, ok := first.(string)
+	if ok {
+		return string(res)
+	}
+
+	return ""
+}
+
+func StringUint16Interface(first uint16Interface) string {
 	res, ok := first.(string)
 	if ok {
 		return string(res)
