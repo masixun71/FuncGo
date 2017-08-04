@@ -14,6 +14,7 @@ import (
 	"reflect"
 	"strings"
 	"errors"
+	"fmt"
 )
 
 var mapFunc map[string]int = make(map[string]int, 2)
@@ -120,11 +121,21 @@ func (m *MakeFiler) MakeMethodSourceWithFile(valueS interface{}, reader *os.File
 }
 
 func (m *MakeFiler) setReplaceObject(valueS interface{}) {
+
+	var saveStr string
+
+	switch s := valueS.(type) {
+	case string:
+		saveStr = s
+	default:
+		saveStr = reflect.TypeOf(valueS).String()
+	}
+
 	reflect.TypeOf(valueS).String()
 	if m.UsePointer {
-		m.ReplaceObject = reflect.TypeOf(valueS).String()
+		m.ReplaceObject = "*" + strings.TrimLeft(saveStr, "*")
 	} else {
-		m.ReplaceObject = strings.TrimLeft(reflect.TypeOf(valueS).String(), "*")
+		m.ReplaceObject = strings.TrimLeft(saveStr, "*")
 	}
 }
 
