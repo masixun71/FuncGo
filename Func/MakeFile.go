@@ -17,12 +17,10 @@ import (
 )
 
 const (
-	None		 = 0
+	None             = 0
 	MultiplePointers = 1
 	FuncGlobalSwitch = 1 << 1
 )
-
-
 
 var mapFunc map[string]int = make(map[string]int, 2)
 var funcCache map[string]int = make(map[string]int, 2)
@@ -43,11 +41,11 @@ type BuildType struct {
 }
 
 type MakeFiler struct {
-	ReplaceObject string
-	BuildType     *BuildType
-	OutputDir     lib.Path
-	UsePointer    bool
-	TMaper        TypeDependent
+	ReplaceObject    string
+	BuildType        *BuildType
+	OutputDir        lib.Path
+	UsePointer       bool
+	TMaper           TypeDependent
 	SpecialOperation uint
 }
 
@@ -268,6 +266,8 @@ func (m *MakeFiler) makeFileByString(cunS []byte, fileName, funcName string) (bo
 			mapFunc[funcName+buildType.FuncString] = 1
 			io.WriteString(file, "\n\n")
 		}
+
+		m.doForSpecialOpearation(file, arrType)
 	}
 
 	return true, nil
@@ -312,16 +312,34 @@ func (m *MakeFiler) checkFuncInit(filename, funcName string) ([]BuildType, error
 	rF := regexp.MustCompile(m.BuildType.FuncString)
 	mapObject := f.Scope.Objects
 	for _, str := range *m.TMaper.GetMap() {
-		realFuncName := rF.ReplaceAllString(funcName, TypeToFuncName(str))
+		var realFuncName string
+
+		if m.UsePointer {
+			realFuncName = rF.ReplaceAllString(funcName, PointerTypeToFuncName(str))
+		} else {
+			realFuncName = rF.ReplaceAllString(funcName, TypeToFuncName(str))
+		}
 		_, ok := mapObject[realFuncName]
 		if ok {
 			mapFunc[realFuncName] = 1
 		} else {
-			arrType = append(arrType, BuildType{TypeString: str, FuncString: TypeToFuncName(str)})
+			arrType = append(arrType, BuildType{TypeString: str, FuncString: PointerTypeToFuncName(str)})
 		}
 	}
 
 	funcCache[filename] = 1
 
 	return arrType, nil
+}
+
+func (m *MakeFiler) doForSpecialOpearation(file *os.File, buildTypes []BuildType) {
+	if m.SpecialOperation == None {
+		return
+	}
+	fset := token.NewFileSet()
+	f, err := parser.ParseFile(fset, file.Name(), nil, parser.ParseComments)
+	if err != nil {
+		panic(err)
+	}
+
 }

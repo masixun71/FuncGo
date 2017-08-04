@@ -1,7 +1,7 @@
 package Func
 
 
-func CompareTF(first, second T) int {
+func CompareTF(first, second *T) int {
 	if first > second {
 		return 1
 	}else if first < second{

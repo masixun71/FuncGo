@@ -1,35 +1,23 @@
 package main
 
 import (
-	"FuncGo/Func"
 	"FuncGo/lib"
-	"os"
+	"go/token"
+	"go/parser"
+	"go/ast"
 )
 
 func main() {
 
-	//InvokeObjectMethod(new(YourT2), "MethodFoo", 10, "abc")
+	fset := token.NewFileSet()
 
-	//var file *os.File
-	//
-	//var ss interface{}
-	//ss = file
-	//
-	//
-	//switch s := ss.(type) {
-	//case *os.File:
-	//	fmt.Println(2,s)
-	//case io.Reader:
-	//	fmt.Println(1,s)
-	//}
+	path := lib.NewPath("/code/MaxTF.go")
 
-	//makeFiler,err := Func.NewMakeFilerSimple(Func.TypeT, "/code")
+	f, err := parser.ParseFile(fset, path.GetPathByRoot(), nil, parser.ParseComments)
+	if err != nil {
+		panic(err)
+	}
 
-	//makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code")
-
-	//if err != nil {
-	//	panic(err)
-	//}
-
+	ast.Print(fset, f)
 
 }
