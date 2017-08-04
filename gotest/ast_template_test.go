@@ -9,7 +9,7 @@ import (
 
 func Test_simple_string(t *testing.T) {
 
-	makeFiler,_ := Func.NewMakeFilerSimple(Func.TypeT, "/code")
+	makeFiler,_ := Func.NewMakeFilerByBasicType(Func.TypeT, "/code")
 
 	_,err := makeFiler.MakeFuncSourceWithString(`
 		package Func
@@ -38,7 +38,7 @@ func Test_simple_string(t *testing.T) {
 
 func Test_simple_file(t *testing.T) {
 
-	makeFiler,_ := Func.NewMakeFilerSimple(Func.TypeT, "/code")
+	makeFiler,_ := Func.NewMakeFilerByBasicType(Func.TypeT, "/code")
 
 	file, err := os.OpenFile(lib.GetRoot()+"/Func/ast.go", os.O_RDWR|os.O_CREATE, 0777)
 	if err != nil {
@@ -52,11 +52,14 @@ func Test_simple_file(t *testing.T) {
 }
 
 func Test_simple_func(t *testing.T) {
-	makeFiler,_ := Func.NewMakeFilerSimple(Func.TypeT, "/code")
+	makeFiler,err := Func.NewMakeFilerByBasicType(Func.TypeT, "/code")
 
+	if err != nil {
+		t.Error(err)
+	}
 	path := lib.NewPath("/Func/ast.go")
 
-	_, err := makeFiler.MakeFuncSourceWithFunc(path, "MaxTF")
+	_, err = makeFiler.MakeFuncSourceWithFunc(path, "MaxTF")
 	if  err != nil {
 		t.Error("test fail", err)
 	}
@@ -65,9 +68,13 @@ func Test_simple_func(t *testing.T) {
 
 func Test_string(t *testing.T) {
 
-	makeFiler,_ := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code")
+	makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code", false, Func.TmapByBasicType())
 
-	_,err := makeFiler.MakeFuncSourceWithString(`
+	if err != nil {
+		t.Error(err)
+	}
+
+	_,err = makeFiler.MakeFuncSourceWithString(`
 		package Func
 		func MaxTF(values ...T) (T, error) {
 
@@ -94,7 +101,11 @@ func Test_string(t *testing.T) {
 
 func Test_file(t *testing.T) {
 
-	makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code")
+	makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code", false, Func.TmapByBasicType())
+
+	if err != nil {
+		t.Error(err)
+	}
 
 	file, err := os.OpenFile(lib.GetRoot()+"/Func/ast.go", os.O_RDWR|os.O_CREATE, 0777)
 	if err != nil {
@@ -108,33 +119,38 @@ func Test_file(t *testing.T) {
 }
 
 func Test_func(t *testing.T) {
-	makeFiler,_ := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code")
+	makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code", false, Func.TmapByBasicType())
+
+	if err != nil {
+		t.Error(err)
+	}
 
 	path := lib.NewPath("/Func/ast.go")
 
-	_, err := makeFiler.MakeFuncSourceWithFunc(path, "MaxTF")
+	_, err = makeFiler.MakeFuncSourceWithFunc(path, "MaxTF")
 	if  err != nil {
 		t.Error("test fail", err)
 	}
 }
 
 func Test_method_func(t *testing.T) {
-	makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code")
+	makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code", false, Func.TmapByBasicType())
 
 	if err != nil {
 		t.Error(err)
 	}
 
+
 	path := lib.NewPath("/Func/ast.go")
 
-	_, err = makeFiler.MakeMethodSourceWithFunc(new(lib.Pather), true, path, "MaxTF")
+	_, err = makeFiler.MakeMethodSourceWithFunc(new(lib.Pather), path, "MaxTF")
 	if err != nil {
 		t.Error(err)
 	}
 }
 
 func Test_method_file(t *testing.T) {
-	makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code")
+	makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code", false, Func.TmapByBasicType())
 
 	if err != nil {
 		t.Error(err)
@@ -145,7 +161,7 @@ func Test_method_file(t *testing.T) {
 		t.Error(err)
 	}
 
-	_, err = makeFiler.MakeMethodSourceWithFile(new(lib.Pather), true, file)
+	_, err = makeFiler.MakeMethodSourceWithFile(new(lib.Pather), file)
 	if err != nil {
 		t.Error(err)
 	}
@@ -153,13 +169,13 @@ func Test_method_file(t *testing.T) {
 
 
 func Test_method_string(t *testing.T) {
-	makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code")
+	makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code", false, Func.TmapByBasicType())
 
 	if err != nil {
 		t.Error(err)
 	}
 
-	_, err = makeFiler.MakeMethodSourceWithString(new(lib.Pather), true, `
+	_, err = makeFiler.MakeMethodSourceWithString(new(lib.Pather), `
 		package Func
 		func MaxTF(values ...T) (T, error) {
 

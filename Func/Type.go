@@ -47,7 +47,9 @@ const (
 	StringPointer
 )
 
-var TYPE_STRING map[reflect.Kind]string = map[reflect.Kind]string{
+type Tmap map[reflect.Kind]string
+
+var TYPE_STRING Tmap = Tmap{
 	reflect.Int:     "int",
 	reflect.Int8:    "int8",
 	reflect.Int16:   "int16",
@@ -63,7 +65,9 @@ var TYPE_STRING map[reflect.Kind]string = map[reflect.Kind]string{
 	reflect.String:  "string",
 }
 
-var TYPE_POINTER_STRING map[reflect.Kind]string = map[reflect.Kind]string{
+var TypeDependentByBasicType = TypeDependenter{Dependents: &TYPE_STRING}
+
+var TYPE_POINTER_STRING Tmap = Tmap{
 	IntPointer:     "*int",
 	Int8Pointer:    "*int8",
 	Int16Pointer:   "*int16",
@@ -79,6 +83,50 @@ var TYPE_POINTER_STRING map[reflect.Kind]string = map[reflect.Kind]string{
 	StringPointer:  "*string",
 }
 
+type ToString interface {
+	String() string
+}
+
+type TypeDependent interface {
+
+}
+
+
+type TypeDependenter struct {
+	Dependents *Tmap
+}
+
+
+func NewTmapByString(values ...string) TypeDependent {
+	var tmap = make(Tmap, 0)
+
+
+	for index,value := range values {
+		tmap[reflect.Kind(index)] = value
+	}
+
+	return &TypeDependenter{Dependents:&tmap}
+}
+
+func TmapByBasicType() TypeDependent {
+	return TypeDependentByBasicType
+}
+
+
+func NewTmapByInterface(values ...interface{}) TypeDependent {
+	var tmap = make(Tmap, 0)
+
+
+	for index,value := range values {
+		if vs, ok := value.(ToString); ok {
+			tmap[reflect.Kind(index)] = vs.String()
+		} else {
+			tmap[reflect.Kind(index)] = reflect.TypeOf(value).String()
+		}
+	}
+
+	return &TypeDependenter{Dependents:&tmap}
+}
 
 
 

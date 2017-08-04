@@ -23,9 +23,9 @@ type MakeFile interface {
 	MakeFuncSourceWithString(str string) (bool, error)
 	MakeFuncSourceWithFile(reader *os.File) (bool, error)
 	MakeFuncSourceWithFunc(readPath lib.Path, funcName string) (bool, error)
-	MakeMethodSourceWithFunc(valueS interface{}, usePointer bool, readPath lib.Path, funcName string) (bool, error)
-	MakeMethodSourceWithString(valueS interface{}, usePointer bool, str string) (bool, error)
-	MakeMethodSourceWithFile(valueS interface{}, usePointer bool, reader *os.File) (bool, error)
+	MakeMethodSourceWithFunc(valueS interface{}, readPath lib.Path, funcName string) (bool, error)
+	MakeMethodSourceWithString(valueS interface{}, str string) (bool, error)
+	MakeMethodSourceWithFile(valueS interface{}, reader *os.File) (bool, error)
 }
 
 type BuildType struct {
@@ -37,10 +37,11 @@ type MakeFiler struct {
 	ReplaceObject string
 	BuildType     *BuildType
 	OutputDir     lib.Path
+	UsePointer    bool
+	TMaper        TypeDependent
 }
 
-func NewMakeFilerSimple(replace int, outputDir string) (MakeFile, error) {
-
+func getSimpleType(replace int) (*BuildType, error) {
 	var buildType BuildType
 
 	switch replace {
@@ -52,15 +53,41 @@ func NewMakeFilerSimple(replace int, outputDir string) (MakeFile, error) {
 		return nil, errors.New("Unknown Type")
 	}
 
-	path := lib.NewPath(outputDir)
-	if !path.IsDir() {
-		return nil, errors.New("outputDir can not find or not dir")
-	}
-
-	return &MakeFiler{BuildType: &buildType, OutputDir: path}, nil
+	return &buildType, nil
 }
 
-func NewMakeFiler(buildType *BuildType, outputDir string) (MakeFile, error) {
+func checkMakeFilerForBuildType(replace int, outputDir string) (*BuildType, lib.Path) {
+	buildType, err := getSimpleType(replace)
+	if err != nil {
+		panic(err)
+	}
+
+	path := lib.NewPath(outputDir)
+	if !path.IsDir() {
+		panic("outputDir can not find or not dir")
+	}
+
+	return buildType, path
+}
+
+func NewMakeFilerByBasicType(replace int, outputDir string) (MakeFile, error) {
+
+	buildType, path := checkMakeFilerForBuildType(replace, outputDir)
+
+	return &MakeFiler{BuildType: buildType, OutputDir: path, UsePointer: false, TMaper: TypeDependentByBasicType}, nil
+}
+
+func NewMakeFilerByBasicPointerType(replace int, outputDir string) (MakeFile, error) {
+	buildType, path := checkMakeFilerForBuildType(replace, outputDir)
+	return &MakeFiler{BuildType: buildType, OutputDir: path, UsePointer: true, TMaper: TypeDependentByBasicType}, nil
+}
+
+func NewMakeFilerSimple(replace int, outputDir string, usePointer bool, tmap TypeDependent) (MakeFile, error) {
+	buildType, path := checkMakeFilerForBuildType(replace, outputDir)
+	return &MakeFiler{BuildType: buildType, OutputDir: path, UsePointer: usePointer, TMaper: tmap}, nil
+}
+
+func NewMakeFiler(buildType *BuildType, outputDir string, usePointer bool, tmap TypeDependent) (MakeFile, error) {
 
 	if strings.ToUpper(buildType.FuncString) == strings.ToUpper(buildType.TypeString) {
 		return nil, errors.New("buildType.FuncString must not equal buildType.TypeString")
@@ -71,36 +98,35 @@ func NewMakeFiler(buildType *BuildType, outputDir string) (MakeFile, error) {
 		return nil, errors.New("outputDir can not find or not dir")
 	}
 
-	return &MakeFiler{BuildType: buildType, OutputDir: path}, nil
+	return &MakeFiler{BuildType: buildType, OutputDir: path, UsePointer: usePointer, TMaper: tmap}, nil
 }
 
-func (m *MakeFiler) MakeMethodSourceWithFunc(valueS interface{}, usePointer bool, readPath lib.Path, funcName string) (bool, error) {
-	m.setReplaceObject(valueS, usePointer)
+func (m *MakeFiler) MakeMethodSourceWithFunc(valueS interface{}, readPath lib.Path, funcName string) (bool, error) {
+	m.setReplaceObject(valueS)
 
 	return m.MakeFuncSourceWithFunc(readPath, funcName)
 }
 
-func (m *MakeFiler) MakeMethodSourceWithString(valueS interface{}, usePointer bool, str string) (bool, error) {
-	m.setReplaceObject(valueS, usePointer)
+func (m *MakeFiler) MakeMethodSourceWithString(valueS interface{}, str string) (bool, error) {
+	m.setReplaceObject(valueS)
 
 	return m.MakeFuncSourceWithString(str)
 }
 
-func (m *MakeFiler) MakeMethodSourceWithFile(valueS interface{}, usePointer bool, reader *os.File) (bool, error) {
-	m.setReplaceObject(valueS, usePointer)
+func (m *MakeFiler) MakeMethodSourceWithFile(valueS interface{}, reader *os.File) (bool, error) {
+	m.setReplaceObject(valueS)
 
 	return m.MakeFuncSourceWithFile(reader)
 }
 
-func (m *MakeFiler) setReplaceObject(valueS interface{}, usePointer bool) {
+func (m *MakeFiler) setReplaceObject(valueS interface{}) {
 	reflect.TypeOf(valueS).String()
-	if usePointer {
+	if m.UsePointer {
 		m.ReplaceObject = reflect.TypeOf(valueS).String()
 	} else {
 		m.ReplaceObject = strings.TrimLeft(reflect.TypeOf(valueS).String(), "*")
 	}
 }
-
 
 func (m *MakeFiler) MakeFuncSourceWithString(str string) (bool, error) {
 	fset := token.NewFileSet()
