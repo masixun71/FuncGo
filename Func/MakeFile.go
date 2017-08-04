@@ -28,6 +28,7 @@ var mapFunc map[string]int = make(map[string]int, 2)
 var funcCache map[string]int = make(map[string]int, 2)
 
 type MakeFile interface {
+	SetSpecialOperation(specialOperation uint)
 	MakeFuncSourceWithString(str string) (bool, error)
 	MakeFuncSourceWithFile(reader *os.File) (bool, error)
 	MakeFuncSourceWithFunc(readPath lib.Path, funcName string) (bool, error)
@@ -47,6 +48,7 @@ type MakeFiler struct {
 	OutputDir     lib.Path
 	UsePointer    bool
 	TMaper        TypeDependent
+	SpecialOperation uint
 }
 
 func getSimpleType(replace int) (*BuildType, error) {
@@ -107,6 +109,10 @@ func NewMakeFiler(buildType *BuildType, outputDir string, usePointer bool, tmap 
 	}
 
 	return &MakeFiler{BuildType: buildType, OutputDir: path, UsePointer: usePointer, TMaper: tmap}, nil
+}
+
+func (m *MakeFiler) SetSpecialOperation(specialOperation uint) {
+	m.SpecialOperation = specialOperation
 }
 
 func (m *MakeFiler) MakeMethodSourceWithFunc(valueS interface{}, readPath lib.Path, funcName string) (bool, error) {
