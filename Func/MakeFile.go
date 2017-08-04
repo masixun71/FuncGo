@@ -200,6 +200,7 @@ func (m *MakeFiler) MakeFuncSourceWithFunc(readPath lib.Path, funcName string) (
 		return false, err
 	}
 
+
 	var start token.Pos
 	var end token.Pos
 
@@ -333,13 +334,13 @@ func (m *MakeFiler) checkFuncInit(filename, funcName string) ([]BuildType, error
 }
 
 func (m *MakeFiler) doForSpecialOpearation(file *os.File, buildTypes []BuildType) {
-	if m.SpecialOperation == None {
-		return
-	}
-	fset := token.NewFileSet()
-	f, err := parser.ParseFile(fset, file.Name(), nil, parser.ParseComments)
-	if err != nil {
-		panic(err)
-	}
+	//if m.SpecialOperation == None {
+	//	return
+	//}
+	//fset := token.NewFileSet()
+	//f, err := parser.ParseFile(fset, file.Name(), nil, parser.ParseComments)
+	//if err != nil {
+	//	panic(err)
+	//}
 
 }

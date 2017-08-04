@@ -1,210 +1,1107 @@
 package code
 
-func MaxInt8(values ...int8) (int8, error) {
+func MaxPointerNt3(values ...int32) (int32, error) {
 
-		len := len(values)
+	len := len(values)
 
-		max := values[0]
-		for i := 1; i < len; i++ {
-			tmpvalue := values[i]
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
 
-			if max < tmpvalue {
-				max = tmpvalue
-			}
+		if max < tmpvalue {
+			max = tmpvalue
 		}
-
-		return max, nil
 	}
 
-func MaxInt32(values ...int32) (int32, error) {
+	return max, nil
+}
 
-		len := len(values)
+func MaxPointerInt(values ...uint8) (uint8, error) {
 
-		max := values[0]
-		for i := 1; i < len; i++ {
-			tmpvalue := values[i]
+	len := len(values)
 
-			if max < tmpvalue {
-				max = tmpvalue
-			}
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
 		}
-
-		return max, nil
 	}
 
-func MaxUint(values ...uint) (uint, error) {
+	return max, nil
+}
 
-		len := len(values)
+func MaxPointerInt1(values ...uint16) (uint16, error) {
 
-		max := values[0]
-		for i := 1; i < len; i++ {
-			tmpvalue := values[i]
+	len := len(values)
 
-			if max < tmpvalue {
-				max = tmpvalue
-			}
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
 		}
-
-		return max, nil
 	}
 
-func MaxUint16(values ...uint16) (uint16, error) {
+	return max, nil
+}
 
-		len := len(values)
+func MaxPointerLoat3(values ...float32) (float32, error) {
 
-		max := values[0]
-		for i := 1; i < len; i++ {
-			tmpvalue := values[i]
+	len := len(values)
 
-			if max < tmpvalue {
-				max = tmpvalue
-			}
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
 		}
-
-		return max, nil
 	}
 
-func MaxString(values ...string) (string, error) {
+	return max, nil
+}
 
-		len := len(values)
+func MaxPointerTrin(values ...string) (string, error) {
 
-		max := values[0]
-		for i := 1; i < len; i++ {
-			tmpvalue := values[i]
+	len := len(values)
 
-			if max < tmpvalue {
-				max = tmpvalue
-			}
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
 		}
-
-		return max, nil
 	}
 
-func MaxInt16(values ...int16) (int16, error) {
+	return max, nil
+}
 
-		len := len(values)
+func MaxPointerN(values ...int) (int, error) {
 
-		max := values[0]
-		for i := 1; i < len; i++ {
-			tmpvalue := values[i]
+	len := len(values)
 
-			if max < tmpvalue {
-				max = tmpvalue
-			}
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
 		}
-
-		return max, nil
 	}
 
-func MaxUint32(values ...uint32) (uint32, error) {
+	return max, nil
+}
 
-		len := len(values)
+func MaxPointerNt1(values ...int16) (int16, error) {
 
-		max := values[0]
-		for i := 1; i < len; i++ {
-			tmpvalue := values[i]
+	len := len(values)
 
-			if max < tmpvalue {
-				max = tmpvalue
-			}
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
 		}
-
-		return max, nil
 	}
 
-func MaxFloat32(values ...float32) (float32, error) {
+	return max, nil
+}
 
-		len := len(values)
+func MaxPointerInt6(values ...uint64) (uint64, error) {
 
-		max := values[0]
-		for i := 1; i < len; i++ {
-			tmpvalue := values[i]
+	len := len(values)
 
-			if max < tmpvalue {
-				max = tmpvalue
-			}
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
 		}
-
-		return max, nil
 	}
 
-func MaxInt(values ...int) (int, error) {
+	return max, nil
+}
 
-		len := len(values)
+func MaxPointerNt(values ...int8) (int8, error) {
 
-		max := values[0]
-		for i := 1; i < len; i++ {
-			tmpvalue := values[i]
+	len := len(values)
 
-			if max < tmpvalue {
-				max = tmpvalue
-			}
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
 		}
-
-		return max, nil
 	}
 
-func MaxFloat64(values ...float64) (float64, error) {
+	return max, nil
+}
 
-		len := len(values)
+func MaxPointerInt3(values ...uint32) (uint32, error) {
 
-		max := values[0]
-		for i := 1; i < len; i++ {
-			tmpvalue := values[i]
+	len := len(values)
 
-			if max < tmpvalue {
-				max = tmpvalue
-			}
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
 		}
-
-		return max, nil
 	}
 
-func MaxInt64(values ...int64) (int64, error) {
+	return max, nil
+}
 
-		len := len(values)
+func MaxPointerLoat6(values ...float64) (float64, error) {
 
-		max := values[0]
-		for i := 1; i < len; i++ {
-			tmpvalue := values[i]
+	len := len(values)
 
-			if max < tmpvalue {
-				max = tmpvalue
-			}
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
 		}
-
-		return max, nil
 	}
 
-func MaxUint8(values ...uint8) (uint8, error) {
+	return max, nil
+}
 
-		len := len(values)
+func MaxPointerNt6(values ...int64) (int64, error) {
 
-		max := values[0]
-		for i := 1; i < len; i++ {
-			tmpvalue := values[i]
+	len := len(values)
 
-			if max < tmpvalue {
-				max = tmpvalue
-			}
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
 		}
-
-		return max, nil
 	}
 
-func MaxUint64(values ...uint64) (uint64, error) {
+	return max, nil
+}
 
-		len := len(values)
+func MaxPointerIn(values ...uint) (uint, error) {
 
-		max := values[0]
-		for i := 1; i < len; i++ {
-			tmpvalue := values[i]
+	len := len(values)
 
-			if max < tmpvalue {
-				max = tmpvalue
-			}
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
 		}
-
-		return max, nil
 	}
+
+	return max, nil
+}
+
+func MaxPointerN(values ...int) (int, error) {
+
+	//pvalues := make([]int, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerNt(values ...int8) (int8, error) {
+
+	//pvalues := make([]int8, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerNt1(values ...int16) (int16, error) {
+
+	//pvalues := make([]int16, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerTrin(values ...string) (string, error) {
+
+	//pvalues := make([]string, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerLoat3(values ...float32) (float32, error) {
+
+	//pvalues := make([]float32, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerNt3(values ...int32) (int32, error) {
+
+	//pvalues := make([]int32, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerNt6(values ...int64) (int64, error) {
+
+	//pvalues := make([]int64, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerIn(values ...uint) (uint, error) {
+
+	//pvalues := make([]uint, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerInt3(values ...uint32) (uint32, error) {
+
+	//pvalues := make([]uint32, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerInt6(values ...uint64) (uint64, error) {
+
+	//pvalues := make([]uint64, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerInt(values ...uint8) (uint8, error) {
+
+	//pvalues := make([]uint8, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerInt1(values ...uint16) (uint16, error) {
+
+	//pvalues := make([]uint16, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerLoat6(values ...float64) (float64, error) {
+
+	//pvalues := make([]float64, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerNt1(values ...int16) (int16, error) {
+
+	//pvalues := make([]int16, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerInt3(values ...uint32) (uint32, error) {
+
+	//pvalues := make([]uint32, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerLoat6(values ...float64) (float64, error) {
+
+	//pvalues := make([]float64, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerNt(values ...int8) (int8, error) {
+
+	//pvalues := make([]int8, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerNt6(values ...int64) (int64, error) {
+
+	//pvalues := make([]int64, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerIn(values ...uint) (uint, error) {
+
+	//pvalues := make([]uint, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerInt1(values ...uint16) (uint16, error) {
+
+	//pvalues := make([]uint16, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerN(values ...int) (int, error) {
+
+	//pvalues := make([]int, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerNt3(values ...int32) (int32, error) {
+
+	//pvalues := make([]int32, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerInt(values ...uint8) (uint8, error) {
+
+	//pvalues := make([]uint8, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerInt6(values ...uint64) (uint64, error) {
+
+	//pvalues := make([]uint64, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerLoat3(values ...float32) (float32, error) {
+
+	//pvalues := make([]float32, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerTrin(values ...string) (string, error) {
+
+	//pvalues := make([]string, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerInt(values ...uint8) (uint8, error) {
+
+	//pvalues := make([]uint8, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerNt1(values ...int16) (int16, error) {
+
+	//pvalues := make([]int16, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerLoat3(values ...float32) (float32, error) {
+
+	//pvalues := make([]float32, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerTrin(values ...string) (string, error) {
+
+	//pvalues := make([]string, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerNt(values ...int8) (int8, error) {
+
+	//pvalues := make([]int8, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerNt3(values ...int32) (int32, error) {
+
+	//pvalues := make([]int32, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerIn(values ...uint) (uint, error) {
+
+	//pvalues := make([]uint, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerInt1(values ...uint16) (uint16, error) {
+
+	//pvalues := make([]uint16, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerN(values ...int) (int, error) {
+
+	//pvalues := make([]int, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerNt6(values ...int64) (int64, error) {
+
+	//pvalues := make([]int64, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerInt3(values ...uint32) (uint32, error) {
+
+	//pvalues := make([]uint32, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerInt6(values ...uint64) (uint64, error) {
+
+	//pvalues := make([]uint64, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
+
+func MaxPointerLoat6(values ...float64) (float64, error) {
+
+	//pvalues := make([]float64, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
+
+	len := len(values)
+
+	max := values[0]
+	for i := 1; i < len; i++ {
+		tmpvalue := values[i]
+
+		if max < tmpvalue {
+			max = tmpvalue
+		}
+	}
+
+	return max, nil
+}
 

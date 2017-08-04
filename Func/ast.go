@@ -1,7 +1,7 @@
 package Func
 
 
-func CompareTF(first, second *T) int {
+func CompareTF(first , second T) int {
 	if first > second {
 		return 1
 	}else if first < second{
@@ -12,6 +12,13 @@ func CompareTF(first, second *T) int {
 }
 
 func MaxTF(values ...T) (T, error) {
+
+	//pvalues := make([]T, 0)
+	//for _,value := range values {
+	//	pvalues = append(pvalues, *value)
+	//}
+
+
 
 	len := len(values)
 

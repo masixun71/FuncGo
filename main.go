@@ -9,15 +9,24 @@ import (
 
 func main() {
 
+	//makeFiler, err := Func.NewMakeFilerByBasicType(Func.TypeT, "/code")
+
+	path := lib.NewPath("/Func/ast1.go")
+
 	fset := token.NewFileSet()
+	f, _ := parser.ParseFile(fset, path.GetPathByRoot(), nil, parser.ParseComments)
 
-	path := lib.NewPath("/code/MaxTF.go")
 
-	f, err := parser.ParseFile(fset, path.GetPathByRoot(), nil, parser.ParseComments)
-	if err != nil {
-		panic(err)
+	for _, decl := range f.Decls {
+		fn, ok := decl.(*ast.FuncDecl)
+		if ok && fn.Name.Name == "CompareTF" {
+			for _, field := range fn.Type.Params.List {
+				for _, name := range field.Names {
+					name.Obj.Name = "aa"
+				}
+			}
+		}
 	}
 
 	ast.Print(fset, f)
-
 }
