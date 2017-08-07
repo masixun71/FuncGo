@@ -7,7 +7,7 @@ import (
 
 func main() {
 
-	makeFiler, _ := Func.NewMakeFilerByBasicType(Func.TypeT, "/code", "*")
+	makeFiler, _ := Func.NewMakeFilerByBasicType(Func.TypeT, "/code", "")
 
 	_,err :=makeFiler.MakeFuncSourceWithString(`
 		package Func

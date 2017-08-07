@@ -14,6 +14,7 @@ import (
 	"reflect"
 	"strings"
 	"errors"
+	"os/exec"
 )
 
 const (
@@ -272,6 +273,8 @@ func (m *MakeFiler) makeFileByString(cunS []byte, fileName, funcName string) (bo
 			io.WriteString(file, "\n\n")
 		}
 
+		exec.Command("gofmt", fileName)
+
 		m.doForSpecialOpearation(file, arrType)
 	}
 
@@ -319,8 +322,8 @@ func (m *MakeFiler) checkFuncInit(filename, funcName string) ([]BuildType, error
 	for _, str := range *m.TMaper.GetMap() {
 		var realFuncName string
 
-		if m.GenerateObject.IsUse {
-			realFuncName = rF.ReplaceAllString(funcName, PointerTypeToFuncName(str))
+		if m.TypePointer.IsUse {
+			realFuncName = rF.ReplaceAllString(funcName, PointerTypeToFuncName(str, m.TypePointer.UseStr))
 		} else {
 			realFuncName = rF.ReplaceAllString(funcName, TypeToFuncName(str))
 		}
@@ -328,8 +331,8 @@ func (m *MakeFiler) checkFuncInit(filename, funcName string) ([]BuildType, error
 		if ok {
 			mapFunc[realFuncName] = 1
 		} else {
-			if m.GenerateObject.IsUse {
-				arrType = append(arrType, BuildType{TypeString: str, FuncString: PointerTypeToFuncName(str)})
+			if m.TypePointer.IsUse {
+				arrType = append(arrType, BuildType{TypeString: str, FuncString: PointerTypeToFuncName(str, m.TypePointer.UseStr)})
 			} else {
 				arrType = append(arrType, BuildType{TypeString: str, FuncString: TypeToFuncName(str)})
 			}
