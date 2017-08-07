@@ -40,14 +40,36 @@ type BuildType struct {
 	TypeString string
 }
 
-type MakeFiler struct {
-	ReplaceObject    string
-	BuildType        *BuildType
-	OutputDir        lib.Path
-	UsePointer       bool
-	TMaper           TypeDependent
-	SpecialOperation uint
+type TypeUsePointer struct {
+	IsUse	bool
+	UseStr  string
 }
+
+type ObjectReplace struct {
+	ReplaceObject           string
+	IsUse 			bool
+}
+
+
+type MakeFiler struct {
+	GenerateObject          *ObjectReplace
+	BuildType               *BuildType
+	OutputDir               lib.Path
+	TypePointer		*TypeUsePointer
+	TMaper                  TypeDependent
+	SpecialOperation        uint
+}
+
+func NewTypeUsePointer(typeStr string) *TypeUsePointer {
+
+	if len(typeStr) == 0 {
+		return &TypeUsePointer{IsUse:false, UseStr:typeStr}
+	} else {
+		return &TypeUsePointer{IsUse:true, UseStr:typeStr}
+	}
+}
+
+
 
 func getSimpleType(replace int) (*BuildType, error) {
 	var buildType BuildType
@@ -78,24 +100,14 @@ func checkMakeFilerForBuildType(replace int, outputDir string) (*BuildType, lib.
 	return buildType, path
 }
 
-func NewMakeFilerByBasicType(replace int, outputDir string) (MakeFile, error) {
+func NewMakeFilerByBasicType(replace int, outputDir, TypePointer string) (MakeFile, error) {
 
 	buildType, path := checkMakeFilerForBuildType(replace, outputDir)
 
-	return &MakeFiler{BuildType: buildType, OutputDir: path, UsePointer: false, TMaper: TmapByBasicType()}, nil
+	return &MakeFiler{BuildType: buildType, OutputDir: path, GenerateObject: &ObjectReplace{IsUse:false}, TypePointer:NewTypeUsePointer(TypePointer), TMaper: TmapByBasicType()}, nil
 }
 
-func NewMakeFilerByBasicPointerType(replace int, outputDir string) (MakeFile, error) {
-	buildType, path := checkMakeFilerForBuildType(replace, outputDir)
-	return &MakeFiler{BuildType: buildType, OutputDir: path, UsePointer: true, TMaper: TmapByBasicType()}, nil
-}
-
-func NewMakeFilerSimple(replace int, outputDir string, usePointer bool, tmap TypeDependent) (MakeFile, error) {
-	buildType, path := checkMakeFilerForBuildType(replace, outputDir)
-	return &MakeFiler{BuildType: buildType, OutputDir: path, UsePointer: usePointer, TMaper: tmap}, nil
-}
-
-func NewMakeFiler(buildType *BuildType, outputDir string, usePointer bool, tmap TypeDependent) (MakeFile, error) {
+func NewMakeFiler(buildType *BuildType, outputDir string, usePointer bool, TypePointer string, tmap TypeDependent, specialOperation uint) (MakeFile, error) {
 
 	if strings.ToUpper(buildType.FuncString) == strings.ToUpper(buildType.TypeString) {
 		return nil, errors.New("buildType.FuncString must not equal buildType.TypeString")
@@ -106,7 +118,7 @@ func NewMakeFiler(buildType *BuildType, outputDir string, usePointer bool, tmap 
 		return nil, errors.New("outputDir can not find or not dir")
 	}
 
-	return &MakeFiler{BuildType: buildType, OutputDir: path, UsePointer: usePointer, TMaper: tmap}, nil
+	return &MakeFiler{BuildType: buildType, OutputDir: path, GenerateObject: &ObjectReplace{IsUse:usePointer}, TypePointer:NewTypeUsePointer(TypePointer), TMaper: tmap, SpecialOperation:specialOperation}, nil
 }
 
 func (m *MakeFiler) SetSpecialOperation(specialOperation uint) {
@@ -143,10 +155,10 @@ func (m *MakeFiler) setReplaceObject(valueS interface{}) {
 	}
 
 	reflect.TypeOf(valueS).String()
-	if m.UsePointer {
-		m.ReplaceObject = "*" + strings.TrimLeft(saveStr, "*")
+	if m.GenerateObject.IsUse {
+		m.GenerateObject.ReplaceObject = "*" + strings.TrimLeft(saveStr, "*")
 	} else {
-		m.ReplaceObject = strings.TrimLeft(saveStr, "*")
+		m.GenerateObject.ReplaceObject = strings.TrimLeft(saveStr, "*")
 	}
 }
 
@@ -210,6 +222,7 @@ func (m *MakeFiler) MakeFuncSourceWithFunc(readPath lib.Path, funcName string) (
 
 			start = fn.Type.Func
 			end = fn.Body.Rbrace
+			break
 		}
 	}
 
@@ -233,9 +246,6 @@ func (m *MakeFiler) makeFileByString(cunS []byte, fileName, funcName string) (bo
 				return false, err
 			}
 			io.WriteString(file, "package "+strings.Trim(m.OutputDir.GetPath(), "/")+"\n\n")
-			if len(m.ReplaceObject) != 0 {
-				io.WriteString(file, "")
-			}
 		} else {
 			tmpFile, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
 			file = tmpFile
@@ -245,9 +255,9 @@ func (m *MakeFiler) makeFileByString(cunS []byte, fileName, funcName string) (bo
 		}
 
 		var buffer bytes.Buffer
-		if len(m.ReplaceObject) != 0 {
+		if m.GenerateObject.IsUse {
 			buffer.Write(cunS[0:5])
-			buffer.WriteString("(f " + m.ReplaceObject + ") ")
+			buffer.WriteString("(f " + m.GenerateObject.ReplaceObject + ") ")
 			buffer.Write(cunS[5:len(cunS)])
 		} else {
 			buffer.Write(cunS)
@@ -315,7 +325,7 @@ func (m *MakeFiler) checkFuncInit(filename, funcName string) ([]BuildType, error
 	for _, str := range *m.TMaper.GetMap() {
 		var realFuncName string
 
-		if m.UsePointer {
+		if m.GenerateObject.IsUse {
 			realFuncName = rF.ReplaceAllString(funcName, PointerTypeToFuncName(str))
 		} else {
 			realFuncName = rF.ReplaceAllString(funcName, TypeToFuncName(str))
