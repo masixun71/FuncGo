@@ -68,7 +68,7 @@ func main() {
 			buffer.WriteString(rootStr[0:fn.Type.Params.Opening - (fn.Type.Func-1)])
 			buffer.WriteString(fileBuffer.String())
 			index := strings.Index(rootStr, "{")
-			buffer.WriteString(rootStr[fn.Type.Params.Closing - (fn.Type.Func-1):index])
+			buffer.WriteString(rootStr[fn.Type.Params.Closing - (fn.Type.Func-1):index+1])
 			for _, pointerStr := range savePointerStr {
 				buffer.WriteString(pointerStr)
 			}
