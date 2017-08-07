@@ -143,5 +143,5 @@ func TypeToFuncName(str string) string {
 }
 
 func PointerTypeToFuncName(str string) string {
-	return "Pointer" + TypeToFuncName(str[1:len(str)-1])
+	return "Pointer" + TypeToFuncName(str)
 }

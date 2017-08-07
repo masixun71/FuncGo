@@ -25,17 +25,3 @@ func CompareTF1(first , second T) int {
 //	}
 //}
 //
-func MaxTFP(values ...T) (T, error) {
-	len := len(values)
-
-	max := values[0]
-	for i := 1; i < len; i++ {
-		tmpvalue := values[i]
-
-		if max < tmpvalue {
-			max = tmpvalue
-		}
-	}
-
-	return max, nil
-}

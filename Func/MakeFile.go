@@ -41,35 +41,32 @@ type BuildType struct {
 }
 
 type TypeUsePointer struct {
-	IsUse	bool
-	UseStr  string
+	IsUse  bool
+	UseStr string
 }
 
 type ObjectReplace struct {
-	ReplaceObject           string
-	IsUse 			bool
+	ReplaceObject string
+	IsUse         bool
 }
 
-
 type MakeFiler struct {
-	GenerateObject          *ObjectReplace
-	BuildType               *BuildType
-	OutputDir               lib.Path
-	TypePointer		*TypeUsePointer
-	TMaper                  TypeDependent
-	SpecialOperation        uint
+	GenerateObject   *ObjectReplace
+	BuildType        *BuildType
+	OutputDir        lib.Path
+	TypePointer      *TypeUsePointer
+	TMaper           TypeDependent
+	SpecialOperation uint
 }
 
 func NewTypeUsePointer(typeStr string) *TypeUsePointer {
 
 	if len(typeStr) == 0 {
-		return &TypeUsePointer{IsUse:false, UseStr:typeStr}
+		return &TypeUsePointer{IsUse: false, UseStr: typeStr}
 	} else {
-		return &TypeUsePointer{IsUse:true, UseStr:typeStr}
+		return &TypeUsePointer{IsUse: true, UseStr: typeStr}
 	}
 }
-
-
 
 func getSimpleType(replace int) (*BuildType, error) {
 	var buildType BuildType
@@ -104,7 +101,7 @@ func NewMakeFilerByBasicType(replace int, outputDir, TypePointer string) (MakeFi
 
 	buildType, path := checkMakeFilerForBuildType(replace, outputDir)
 
-	return &MakeFiler{BuildType: buildType, OutputDir: path, GenerateObject: &ObjectReplace{IsUse:false}, TypePointer:NewTypeUsePointer(TypePointer), TMaper: TmapByBasicType()}, nil
+	return &MakeFiler{BuildType: buildType, OutputDir: path, GenerateObject: &ObjectReplace{IsUse: false}, TypePointer: NewTypeUsePointer(TypePointer), TMaper: TmapByBasicType()}, nil
 }
 
 func NewMakeFiler(buildType *BuildType, outputDir string, usePointer bool, TypePointer string, tmap TypeDependent, specialOperation uint) (MakeFile, error) {
@@ -118,7 +115,7 @@ func NewMakeFiler(buildType *BuildType, outputDir string, usePointer bool, TypeP
 		return nil, errors.New("outputDir can not find or not dir")
 	}
 
-	return &MakeFiler{BuildType: buildType, OutputDir: path, GenerateObject: &ObjectReplace{IsUse:usePointer}, TypePointer:NewTypeUsePointer(TypePointer), TMaper: tmap, SpecialOperation:specialOperation}, nil
+	return &MakeFiler{BuildType: buildType, OutputDir: path, GenerateObject: &ObjectReplace{IsUse: usePointer}, TypePointer: NewTypeUsePointer(TypePointer), TMaper: tmap, SpecialOperation: specialOperation}, nil
 }
 
 func (m *MakeFiler) SetSpecialOperation(specialOperation uint) {
@@ -190,7 +187,9 @@ func (m *MakeFiler) makeCodeForAst(f *ast.File, buf []byte) (bool, error) {
 	for _, decl := range f.Decls {
 		fn, ok := decl.(*ast.FuncDecl)
 		if ok {
-			_, err := m.makeCode(buf[fn.Type.Func-1: fn.Body.Rbrace], fn.Name.Name)
+			resetBuf, _ := m.doForMultiplePointers(fn, buf)
+
+			_, err := m.makeCode(resetBuf, fn.Name.Name)
 			if err != nil {
 				return false, err
 			}
@@ -212,21 +211,16 @@ func (m *MakeFiler) MakeFuncSourceWithFunc(readPath lib.Path, funcName string) (
 		return false, err
 	}
 
-
-	var start token.Pos
-	var end token.Pos
-
 	for _, decl := range f.Decls {
 		fn, ok := decl.(*ast.FuncDecl)
 		if ok && fn.Name.Name == funcName {
 
-			start = fn.Type.Func
-			end = fn.Body.Rbrace
-			break
+			resetBuf, _ := m.doForMultiplePointers(fn, b)
+			return m.makeCode(resetBuf, funcName)
 		}
 	}
 
-	return m.makeCode(b[start-1: end], funcName)
+	return false, errors.New("can not find func")
 }
 
 func (m *MakeFiler) makeCode(str []byte, funcName string) (bool, error) {
@@ -334,13 +328,70 @@ func (m *MakeFiler) checkFuncInit(filename, funcName string) ([]BuildType, error
 		if ok {
 			mapFunc[realFuncName] = 1
 		} else {
-			arrType = append(arrType, BuildType{TypeString: str, FuncString: PointerTypeToFuncName(str)})
+			if m.GenerateObject.IsUse {
+				arrType = append(arrType, BuildType{TypeString: str, FuncString: PointerTypeToFuncName(str)})
+			} else {
+				arrType = append(arrType, BuildType{TypeString: str, FuncString: TypeToFuncName(str)})
+			}
 		}
 	}
 
 	funcCache[filename] = 1
 
 	return arrType, nil
+}
+
+func (m *MakeFiler) doForMultiplePointers(fn *ast.FuncDecl, buf []byte) ([]byte, error) {
+
+	if !m.TypePointer.IsUse {
+		return buf[fn.Type.Func-1: fn.Body.Rbrace], nil
+	}
+
+	str := string(buf[fn.Type.Params.Opening:fn.Type.Params.Closing])
+	savePointerStr := make([]string, 1)
+	fileBuffer := new(bytes.Buffer)
+	var buffer bytes.Buffer
+
+	var typName string
+	for _, field := range fn.Type.Params.List {
+		for _, name := range field.Names {
+			//varLen := len(name.Name)
+			index := strings.Index(str, name.Name)
+			str = str[0:index] + "p" + str[index:len(str)]
+
+			switch paramsType := field.Type.(type) {
+			case *ast.Ident:
+				typName = paramsType.Name
+				savePointerStr = append(savePointerStr, "\n\t"+name.Name+" := "+m.TypePointer.UseStr+"p"+name.Name+"\n")
+			case *ast.Ellipsis:
+				if ident, ok := paramsType.Elt.(*ast.Ident); ok {
+					typName = ident.Name
+					savePointerStr = append(savePointerStr, "\n\t"+name.Name+" := make([]"+ident.Name+", 0)\n\tfor _,value := range p"+name.Name+" { "+name.Name+" = append("+name.Name+", "+m.TypePointer.UseStr+"value)}\n")
+				}
+			default:
+				panic("params type must be Ident or Ellipsis")
+			}
+		}
+
+		rF := regexp.MustCompile(typName)
+		// regexp包也可以用来将字符串的一部分替换为其他的值
+		resString := rF.ReplaceAllString(str, "{{.}}")
+		tem := template.Must(template.New("field").Parse(resString))
+		tem.Execute(fileBuffer, m.TypePointer.UseStr+typName)
+
+	}
+
+	rootStr := string(buf[fn.Type.Func-1: fn.Body.Rbrace])
+	buffer.WriteString(rootStr[0:fn.Type.Params.Opening-(fn.Type.Func-1)])
+	buffer.WriteString(fileBuffer.String())
+	index := strings.Index(rootStr, "{")
+	buffer.WriteString(rootStr[fn.Type.Params.Closing-(fn.Type.Func-1):index+1])
+	for _, pointerStr := range savePointerStr {
+		buffer.WriteString(pointerStr)
+	}
+	buffer.WriteString(rootStr[index+1:len(rootStr)])
+
+	return buffer.Bytes(), nil
 }
 
 func (m *MakeFiler) doForSpecialOpearation(file *os.File, buildTypes []BuildType) {
