@@ -7,9 +7,9 @@ import (
 
 func main() {
 
-	makeFiler, _ := Func.NewMakeFilerByBasicType(Func.TypeT, "/code", "")
+	makeFiler,_ := Func.NewMakeFilerByBasicType(Func.TypeT, "/code", "**")
 
-	_,err :=makeFiler.MakeFuncSourceWithString(`
+	_,err := makeFiler.MakeFuncSourceWithString(`
 		package Func
 		func MaxTF(values ...T) (T, error) {
 
@@ -26,6 +26,7 @@ func main() {
 
 		return max, nil
 	}`)
+
 	if err != nil {
 		fmt.Println(err)
 	}
