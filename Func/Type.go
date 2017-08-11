@@ -142,6 +142,14 @@ func TypeToFuncName(str string) string {
 	return strings.Title(str)
 }
 
-func PointerTypeToFuncName(str string) string {
-	return "Pointer" + TypeToFuncName(str)
+func PointerTypeToFuncName(str, pointerStr string) string {
+
+	count := strings.Count(pointerStr,"*")
+	res := ""
+
+	for i := 0; i < count; i++ {
+		res += "Pointer"
+	}
+
+	return res + TypeToFuncName(str)
 }

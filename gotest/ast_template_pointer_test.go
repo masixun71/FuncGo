@@ -7,9 +7,11 @@ import (
 	"FuncGo/lib"
 )
 
-func Test_simple_string(t *testing.T) {
 
-	makeFiler,_ := Func.NewMakeFilerByBasicType(Func.TypeT, "/code", "")
+
+func Test_simple_pointer_string(t *testing.T) {
+
+	makeFiler,_ := Func.NewMakeFilerByBasicType(Func.TypeT, "/code", "**")
 
 	_,err := makeFiler.MakeFuncSourceWithString(`
 		package Func
@@ -38,10 +40,9 @@ func Test_simple_string(t *testing.T) {
 
 
 
+func Test_simple_pointer_file(t *testing.T) {
 
-func Test_simple_file(t *testing.T) {
-
-	makeFiler,_ := Func.NewMakeFilerByBasicType(Func.TypeT, "/code", "")
+	makeFiler,_ := Func.NewMakeFilerByBasicType(Func.TypeT, "/code", "**")
 
 	file, err := os.OpenFile(lib.GetRoot()+"/Func/ast.go", os.O_RDWR|os.O_CREATE, 0777)
 	if err != nil {
@@ -56,8 +57,9 @@ func Test_simple_file(t *testing.T) {
 
 
 
-func Test_simple_func(t *testing.T) {
-	makeFiler,err := Func.NewMakeFilerByBasicType(Func.TypeT, "/code", "")
+
+func Test_simple_pointer_func(t *testing.T) {
+	makeFiler,err := Func.NewMakeFilerByBasicType(Func.TypeT, "/code", "***")
 
 	if err != nil {
 		t.Error(err)
@@ -73,9 +75,9 @@ func Test_simple_func(t *testing.T) {
 
 
 
-func Test_string(t *testing.T) {
+func Test_pointer_string(t *testing.T) {
 
-	makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code", false, "", Func.TmapByBasicType(), 0)
+	makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code", false, "**", Func.TmapByBasicType(), 0)
 
 	if err != nil {
 		t.Error(err)
@@ -107,10 +109,9 @@ func Test_string(t *testing.T) {
 
 
 
+func Test_pointer_file(t *testing.T) {
 
-func Test_file(t *testing.T) {
-
-	makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code", false, "", Func.TmapByBasicType(), 0)
+	makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code", false, "**", Func.TmapByBasicType(), 0)
 
 	if err != nil {
 		t.Error(err)
@@ -129,8 +130,8 @@ func Test_file(t *testing.T) {
 
 
 
-func Test_func(t *testing.T) {
-	makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code", false, "", Func.TmapByBasicType(), 0)
+func Test_pointer_func(t *testing.T) {
+	makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code", false, "**", Func.TmapByBasicType(), 0)
 
 	if err != nil {
 		t.Error(err)
@@ -146,8 +147,8 @@ func Test_func(t *testing.T) {
 
 
 
-func Test_method_func(t *testing.T) {
-	makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code", false, "", Func.TmapByBasicType(), 0)
+func Test_method_pointer_func(t *testing.T) {
+	makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code", true, "**", Func.TmapByBasicType(), 0)
 
 	if err != nil {
 		t.Error(err)
@@ -164,8 +165,9 @@ func Test_method_func(t *testing.T) {
 
 
 
-func Test_method_file(t *testing.T) {
-	makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code", false, "", Func.TmapByBasicType(), 0)
+
+func Test_method_pointer_file(t *testing.T) {
+	makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code", true, "**", Func.TmapByBasicType(), 0)
 
 	if err != nil {
 		t.Error(err)
@@ -185,8 +187,8 @@ func Test_method_file(t *testing.T) {
 
 
 
-func Test_method_string(t *testing.T) {
-	makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code", false, "", Func.TmapByBasicType(), 0)
+func Test_method_pointer_string(t *testing.T) {
+	makeFiler,err := Func.NewMakeFiler(&Func.BuildType{FuncString:"TF", TypeString:"T"}, "/code", true, "**", Func.TmapByBasicType(), 0)
 
 	if err != nil {
 		t.Error(err)
@@ -213,4 +215,3 @@ func Test_method_string(t *testing.T) {
 		t.Error(err)
 	}
 }
-
