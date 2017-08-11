@@ -30,6 +30,23 @@ func main() {
 		fmt.Println(err)
 	}
 
+	makeFiler.AddSwitchWithString("switchMax", `
+		package Func
+		func MaxTF(values ...T) (T, error) {
+
+		len := len(values)
+
+		max := values[0]
+		for i := 1; i < len; i++ {
+			tmpvalue := values[i]
+
+			if max < tmpvalue {
+				max = tmpvalue
+			}
+		}
+
+		return max, nil
+	}`)
 	//makeFiler, err := Func.NewMakeFilerByBasicType(Func.TypeT, "/code")
 
 	//path := lib.NewPath("/Func/ast1.go")

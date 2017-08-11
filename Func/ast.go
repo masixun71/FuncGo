@@ -1,10 +1,9 @@
 package Func
 
-
-func CompareTF(first , second T) int {
+func CompareTF(first, second T) int {
 	if first > second {
 		return 1
-	}else if first < second{
+	} else if first < second {
 		return -1
 	} else {
 		return 0
@@ -17,8 +16,6 @@ func MaxTF(values ...T) (T, error) {
 	//for _,value := range values {
 	//	pvalues = append(pvalues, *value)
 	//}
-
-
 
 	len := len(values)
 
@@ -34,9 +31,6 @@ func MaxTF(values ...T) (T, error) {
 	return max, nil
 }
 
-
-
-
 func StringTFInterface(first TInterface) string {
 	res, ok := first.(string)
 	if ok {
@@ -44,4 +38,26 @@ func StringTFInterface(first TInterface) string {
 	}
 
 	return ""
+}
+
+func Switch(first, second T) int {
+
+	switch first.(type) {
+	case int:
+		return CompareTF(first, second)
+
+	}
+
+	panic("can't find type")
+}
+
+func SwitchB(values ...T) (T, error) {
+
+	switch values[0].(type) {
+	case int:
+		return MaxTF(values...)
+
+	}
+
+	panic("can't find type")
 }

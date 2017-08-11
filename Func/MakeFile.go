@@ -33,6 +33,9 @@ type MakeFile interface {
 	MakeMethodSourceWithFunc(valueS interface{}, readPath lib.Path, funcName string) (bool, error)
 	MakeMethodSourceWithString(valueS interface{}, str string) (bool, error)
 	MakeMethodSourceWithFile(valueS interface{}, reader *os.File) (bool, error)
+	AddSwitchWithString(switchName , str string) (bool, error)
+	AddSwitchWithFunc(switchName , funcName string, readPath lib.Path)  (bool, error)
+	AddSwitchWithFile(switchName string, reader *os.File)  (bool, error)
 }
 
 type BuildType struct {
@@ -57,6 +60,7 @@ type MakeFiler struct {
 	TypePointer      *TypeUsePointer
 	TMaper           TypeDependent
 	SpecialOperation uint
+	File			 *os.File
 }
 
 func NewTypeUsePointer(typeStr string) *TypeUsePointer {
@@ -272,7 +276,7 @@ func (m *MakeFiler) makeFileByString(cunS []byte, fileName, funcName string) (bo
 			io.WriteString(file, "\n\n")
 		}
 
-		m.doForSpecialOpearation(file, arrType)
+		m.File = file
 	}
 
 	return true, nil
@@ -394,14 +398,3 @@ func (m *MakeFiler) doForMultiplePointers(fn *ast.FuncDecl, buf []byte) ([]byte,
 	return buffer.Bytes(), nil
 }
 
-func (m *MakeFiler) doForSpecialOpearation(file *os.File, buildTypes []BuildType) {
-	//if m.SpecialOperation == None {
-	//	return
-	//}
-	//fset := token.NewFileSet()
-	//f, err := parser.ParseFile(fset, file.Name(), nil, parser.ParseComments)
-	//if err != nil {
-	//	panic(err)
-	//}
-
-}
