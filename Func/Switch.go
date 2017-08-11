@@ -18,6 +18,9 @@ func (m *MakeFiler) AddSwitchWithString(switchName , str string) (bool, error) {
 		return false, err
 	}
 
+	var saveTypeMap = make(map[string]bool)
+
+
 	for _, decl := range f.Decls {
 		fn, ok := decl.(*ast.FuncDecl)
 		if ok {
@@ -27,6 +30,23 @@ func (m *MakeFiler) AddSwitchWithString(switchName , str string) (bool, error) {
 				for _, name := range params.Names {
 					fmt.Println(name.Name)
 				}
+
+				switch paramsType := params.Type.(type) {
+				case *ast.Ident:
+					saveTypeMap[paramsType.Name] = true
+				case *ast.Ellipsis:
+					ident, ok  := paramsType.Elt.(*ast.Ident)
+					if ok {
+						saveTypeMap[ident.Name] = true
+					}
+
+				default:
+					panic("params type must be Ident or Ellipsis")
+				}
+			}
+
+			if len(saveTypeMap) > 1 {
+				panic("type is more")
 			}
 
 		}
