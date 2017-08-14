@@ -456,16 +456,3 @@ func MaxFloat32(values ...float32) (float32, error) {
 		return max, nil
 	}
 
-func switchMax(values interface{}, second interface{})  (int, error) {
-	switch getvalue := values.(type) {
-	case int:
-		return get(getvalue, second)
-	}
-
-panic("can't find type")
-}
-
-
-func get(first, second int) (int, error) {
-	return 1, nil
-}
