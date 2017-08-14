@@ -1,27 +1,11 @@
 package Func
 
-
-func CompareTF1(first , second T) int {
-
-	if first > second {
-		return 1
-	}else if first < second{
-		return -1
-	} else {
-		return 0
-	}
-}
-
-//func CompareTFP(pfirst , psecond *T) int {
-//	first := *pfirst
-//	second := *psecond
+//func SwitchB(fisrt interface{}, values ...interface{}) (T, error) {
 //
-//	if first > second {
-//		return 1
-//	}else if first < second{
-//		return -1
-//	} else {
-//		return 0
+//	switch values[0].(type) {
+//	case int:
+//		return MaxTF(values...)
 //	}
-//}
 //
+//	panic("can't find type")
+//}

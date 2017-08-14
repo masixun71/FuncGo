@@ -7,9 +7,27 @@ import (
 
 func main() {
 
-	makeFiler,_ := Func.NewMakeFilerByBasicType(Func.TypeT, "/code", "**")
 
-	_,err := makeFiler.MakeFuncSourceWithString(`
+
+	//	fset := token.NewFileSet()
+	//	f, err := parser.ParseFile(fset, "", `
+	//			package Func
+	//			func SwitchB(fisrt interface{}, values ...interface{}) (T, error) {
+	//
+	//	switch values[0].(type) {
+	//	case int:
+	//		return MaxTF(values...)
+	//
+	//	}
+	//
+	//	panic("can't find type")
+	//}
+	//	`, parser.ParseComments)
+	//
+	//	ast.Print(fset, f)
+
+	makeFiler, _ := Func.NewMakeFilerByBasicType(Func.TypeT, "/code", "")
+	makeFiler.MakeFuncSourceWithString(`
 		package Func
 		func MaxTF(values ...T) (T, error) {
 
@@ -26,12 +44,7 @@ func main() {
 
 		return max, nil
 	}`)
-
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	makeFiler.AddSwitchWithString("switchMax", `
+	_, err :=makeFiler.AddSwitchWithString("switchMax", `
 		package Func
 		func MaxTF(values ...T) (T, error) {
 
@@ -48,6 +61,8 @@ func main() {
 
 		return max, nil
 	}`)
+	fmt.Println(err)
+
 	//makeFiler, err := Func.NewMakeFilerByBasicType(Func.TypeT, "/code")
 
 	//path := lib.NewPath("/Func/ast1.go")

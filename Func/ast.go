@@ -40,24 +40,24 @@ func StringTFInterface(first TInterface) string {
 	return ""
 }
 
-func Switch(first, second T) int {
-
-	switch first.(type) {
-	case int:
-		return CompareTF(first, second)
-
-	}
-
-	panic("can't find type")
-}
-
-func SwitchB(values ...T) (T, error) {
-
-	switch values[0].(type) {
-	case int:
-		return MaxTF(values...)
-
-	}
-
-	panic("can't find type")
-}
+//func Switch(first, second T) int {
+//
+//	switch first.(type) {
+//	case int:
+//		return CompareTF(first, second)
+//
+//	}
+//
+//	panic("can't find type")
+//}
+//
+//func SwitchB(fisrt interface{}, values ...interface{}) (T, error) {
+//
+//	switch values[0].(type) {
+//	case int:
+//		return MaxTF(values...)
+//
+//	}
+//
+//	panic("can't find type")
+//}

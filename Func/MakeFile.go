@@ -61,7 +61,6 @@ type MakeFiler struct {
 	TypePointer      *TypeUsePointer
 	TMaper           TypeDependent
 	SpecialOperation uint
-	File			 *os.File
 }
 
 func NewTypeUsePointer(typeStr string) *TypeUsePointer {
@@ -277,7 +276,6 @@ func (m *MakeFiler) makeFileByString(cunS []byte, fileName, funcName string) (bo
 			io.WriteString(file, "\n\n")
 		}
 
-		m.File = file
 		exec.Command("gofmt", fileName)
 
 	}

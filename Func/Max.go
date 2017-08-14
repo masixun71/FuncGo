@@ -53,7 +53,7 @@ func maxSwitch(p reflect.Type) func(...interface{}) (interface{}, error) {
 	case reflect.Bool:
 		return maxBool
 	case reflect.Int:
-		return ASTMax
+		return maxInt
 	case reflect.Int8:
 		return maxInt8
 	case reflect.Int16:
