@@ -23,8 +23,8 @@ const (
 	FuncGlobalSwitch = 1 << 1
 )
 
-var mapFunc map[string]int = make(map[string]int, 2)
-var funcCache map[string]int = make(map[string]int, 2)
+var mapFunc map[string]int = make(map[string]int, 0)
+var funcCache map[string]int = make(map[string]int, 0)
 
 type MakeFile interface {
 	SetSpecialOperation(specialOperation uint)
